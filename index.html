@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FERCO FARMA · Gestión de Proveedores</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   ROOT & RESET
+══════════════════════════════════════════════════════════════ */
+:root {
+  --bg:        #06061A;
+  --bg2:       #0B0B28;
+  --bg3:       #10103A;
+  --card:      rgba(255,255,255,0.04);
+  --card2:     rgba(255,255,255,0.07);
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.14);
+  --purple:    #7C3AED;
+  --purple2:   #5B21B6;
+  --purple3:   #A78BFA;
+  --orange:    #F97316;
+  --orange2:   #FB923C;
+  --green:     #10B981;
+  --green2:    #059669;
+  --red:       #EF4444;
+  --red2:      #DC2626;
+  --yellow:    #F59E0B;
+  --blue:      #3B82F6;
+  --text:      #F1F0FA;
+  --text2:     rgba(241,240,250,0.6);
+  --text3:     rgba(241,240,250,0.35);
+  --shadow:    0 8px 32px rgba(0,0,0,0.5);
+  --glow-p:    0 0 30px rgba(124,58,237,0.3);
+  --glow-o:    0 0 30px rgba(249,115,22,0.3);
+  --r:         14px;
+  --r2:        10px;
+  --sidebar:   264px;
+  --topbar:    58px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* ── COSMIC BACKGROUND ── */
+.cosmic-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.cosmic-bg::before{content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 10% 15%, rgba(124,58,237,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 90% 85%, rgba(249,115,22,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 35% 35% at 55% 45%, rgba(124,58,237,0.06) 0%, transparent 65%);
+}
+.cosmic-bg .stars{position:absolute;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 18% 28%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 42% 72%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 65% 18%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 82% 52%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 12% 82%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 77% 88%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 57% 57%, rgba(167,139,250,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 32% 12%, rgba(251,146,60,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 48% 35%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,0.5) 0%, transparent 100%);
+  background-size:500px 500px;
+  animation:twinkle 9s ease-in-out infinite alternate}
+@keyframes twinkle{0%{opacity:.5}100%{opacity:1}}
+
+/* ══════════════════════════════════════════════════════════════
+   LOGIN
+══════════════════════════════════════════════════════════════ */
+#loginPage{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+#loginPage.hidden{display:none}
+.login-card{background:rgba(11,11,40,0.93);backdrop-filter:blur(24px);border:1px solid var(--border2);border-radius:26px;padding:48px 44px;width:100%;max-width:430px;text-align:center;box-shadow:0 32px 90px rgba(0,0,0,0.65),var(--glow-p)}
+.login-logo-wrap{width:80px;height:80px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--orange));display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 28px rgba(124,58,237,0.5)}
+.login-brand{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;letter-spacing:.14em;color:#fff;margin-bottom:3px}
+.login-sub{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.login-role-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:30px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:var(--purple3)}
+.login-field{margin-bottom:14px;text-align:left}
+.login-field label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px}
+.login-field input{width:100%;height:50px;background:rgba(255,255,255,.05);border:1.5px solid var(--border2);border-radius:11px;padding:0 16px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:.2s}
+.login-field input:focus{border-color:var(--purple3);background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(124,58,237,.2)}
+.login-btn{width:100%;height:52px;background:linear-gradient(135deg,var(--purple),var(--orange));border:none;border-radius:12px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;letter-spacing:.1em;cursor:pointer;margin-top:6px;transition:.2s;position:relative;overflow:hidden}
+.login-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--orange),var(--purple));opacity:0;transition:.35s}
+.login-btn:hover::before{opacity:1}
+.login-btn span{position:relative;z-index:1}
+.login-err{color:var(--red);font-size:12px;margin-top:10px;display:none;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.login-switch{margin-top:22px;font-size:12px;color:var(--text3)}
+.login-switch a{color:var(--purple3);cursor:pointer;font-weight:600;text-decoration:underline}
+
+/* ══════════════════════════════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════════════════════════════ */
+#app{position:fixed;inset:0;z-index:10;display:flex}
+#app.hidden{display:none}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);flex-shrink:0;background:rgba(11,11,40,0.96);backdrop-filter:blur(24px);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:50}
+.sidebar-head{padding:22px 18px 14px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border)}
+.sidebar-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--orange));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 4px 14px rgba(124,58,237,.4)}
+.sidebar-brand{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;line-height:1.2}
+.sidebar-brand span{display:block;font-size:9px;font-weight:400;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
+.sidebar-nav{flex:1;padding:14px 10px;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
+.nav-section{font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;padding:12px 10px 5px;margin-top:6px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.15s;color:var(--text2);font-size:13px;font-weight:600;position:relative;border:1px solid transparent}
+.nav-item:hover{background:var(--card2);color:var(--text)}
+.nav-item.active{background:linear-gradient(135deg,rgba(124,58,237,.22),rgba(249,115,22,.13));color:#fff;border-color:rgba(124,58,237,.28)}
+.nav-item.active::before{content:'';position:absolute;left:-1px;top:22%;bottom:22%;width:3px;background:linear-gradient(var(--purple),var(--orange));border-radius:0 3px 3px 0}
+.nav-icon{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--orange);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;min-width:20px;text-align:center;animation:pulse-badge 2s ease infinite}
+@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:.7}}
+.sidebar-foot{padding:14px;border-top:1px solid var(--border)}
+.user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--border)}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--orange));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;text-transform:uppercase}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+.logout-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;padding:5px;border-radius:7px;transition:.15s}
+.logout-btn:hover{color:var(--red);background:rgba(239,68,68,.1)}
+
+/* MAIN */
+.main-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--topbar);background:rgba(6,6,26,0.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:11px;flex-shrink:0}
+.menu-toggle{display:none;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px;border-radius:8px}
+.topbar-title{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;letter-spacing:.06em;flex:1}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.pages{flex:1;overflow-y:auto;padding:22px}
+
+/* ── PAGES ── */
+.page{display:none;animation:fadeIn .28s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════════════════════════════════
+   COMPONENTS
+══════════════════════════════════════════════════════════════ */
+/* Glass card */
+.glass-card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--r);padding:20px;transition:.18s}
+.glass-card:hover{background:var(--card2);border-color:var(--border2)}
+
+/* Section header */
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.section-head h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:.04em;flex:1}
+.section-sep{height:1px;background:linear-gradient(90deg,var(--purple),transparent);margin-bottom:20px;opacity:.5}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:0 18px;height:40px;border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;outline:none;transition:.15s;white-space:nowrap;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.3)}
+.btn-primary:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-orange{background:linear-gradient(135deg,var(--orange),#ea6c0e);color:#fff;box-shadow:0 4px 14px rgba(249,115,22,.3)}
+.btn-orange:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.3)}
+.btn-green:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-ghost{background:var(--card);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--card2);border-color:var(--border2);color:var(--text)}
+.btn-danger{background:rgba(239,68,68,.14);color:var(--red);border:1px solid rgba(239,68,68,.22)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-warning{background:rgba(245,158,11,.14);color:var(--yellow);border:1px solid rgba(245,158,11,.22)}
+.btn-warning:hover{background:rgba(245,158,11,.25)}
+.btn-sm{height:34px;padding:0 13px;font-size:12px;border-radius:8px}
+.btn-xs{height:28px;padding:0 10px;font-size:11px;border-radius:7px}
+.btn-icon{width:40px;padding:0;justify-content:center}
+.btn-icon.sm{width:34px;height:34px}
+.btn-icon.xs{width:28px;height:28px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:15px}
+.field label{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.field input,.field select,.field textarea{background:rgba(255,255,255,.05);border:1.5px solid var(--border2);border-radius:9px;padding:0 13px;height:44px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.18s;width:100%}
+.field textarea{height:auto;padding:11px 13px;resize:vertical;min-height:78px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--purple3);background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(124,58,237,.14)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field select option{background:var(--bg2);color:var(--text)}
+.field-hint{font-size:10px;color:var(--text3);margin-top:1px;line-height:1.4}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+
+/* Stats */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px}
+.stat-mini{padding:16px 18px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);position:relative;overflow:hidden;transition:.18s}
+.stat-mini:hover{background:var(--card2);border-color:var(--border2)}
+.stat-mini-icon{font-size:20px;margin-bottom:8px;display:block}
+.stat-mini-val{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;line-height:1}
+.stat-mini-lbl{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.03em}
+.stat-mini-glow{position:absolute;top:-10px;right:-10px;width:60px;height:60px;border-radius:50%;filter:blur(25px);pointer-events:none;opacity:.5}
+
+/* Grid layouts */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+/* Search bar */
+.search-bar{display:flex;align-items:center;gap:9px;margin-bottom:16px;flex-wrap:wrap}
+.search-input{height:40px;background:rgba(255,255,255,.05);border:1.5px solid var(--border2);border-radius:9px;padding:0 13px 0 38px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:.18s;min-width:200px;flex:1;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='rgba(241,240,250,0.3)' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:11px center}
+.search-input:focus{border-color:var(--purple3)}
+.filter-select{height:40px;background:rgba(255,255,255,.05);border:1.5px solid var(--border2);border-radius:9px;padding:0 12px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:.18s}
+.filter-select:focus{border-color:var(--purple3)}
+.filter-select option{background:var(--bg2)}
+
+/* Table */
+.tbl-wrap{overflow-x:auto;border-radius:var(--r2);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:rgba(255,255,255,.035);padding:10px 13px;text-align:left;font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.035);transition:.13s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+tbody td{padding:11px 13px;vertical-align:middle}
+.td-muted{color:var(--text3);font-size:12px}
+.td-mono{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600}
+
+/* Chips */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+.chip-purple{background:rgba(124,58,237,.18);color:var(--purple3);border:1px solid rgba(124,58,237,.28)}
+.chip-orange{background:rgba(249,115,22,.18);color:var(--orange2);border:1px solid rgba(249,115,22,.28)}
+.chip-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.chip-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.22)}
+.chip-yellow{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid rgba(245,158,11,.22)}
+.chip-blue{background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.22)}
+
+/* Transaction type pills */
+.tipo-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.tp-CXP{background:rgba(239,68,68,.14);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.tp-CXC{background:rgba(16,185,129,.14);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.tp-PAG{background:rgba(124,58,237,.14);color:var(--purple3);border:1px solid rgba(124,58,237,.2)}
+.tp-REC{background:rgba(245,158,11,.14);color:var(--yellow);border:1px solid rgba(245,158,11,.2)}
+
+/* Status chips */
+.status-pendiente{background:rgba(245,158,11,.14);color:var(--yellow);border:1px solid rgba(245,158,11,.22);padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.status-aceptado{background:rgba(16,185,129,.14);color:var(--green);border:1px solid rgba(16,185,129,.22);padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.status-disputa{background:rgba(239,68,68,.14);color:var(--red);border:1px solid rgba(239,68,68,.22);padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:4px;animation:pulseBorder 2s ease infinite}
+@keyframes pulseBorder{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 3px rgba(239,68,68,.15)}}
+
+/* Balance cards */
+.balance-card{border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;cursor:pointer;transition:.2s;border:1px solid transparent}
+.balance-card:hover{transform:translateY(-2px)}
+.balance-card.debt{background:linear-gradient(135deg,rgba(239,68,68,.13),rgba(220,38,38,.08));border-color:rgba(239,68,68,.22)}
+.balance-card.credit{background:linear-gradient(135deg,rgba(16,185,129,.13),rgba(5,150,105,.08));border-color:rgba(16,185,129,.22)}
+.balance-card.zero{background:var(--card);border-color:var(--border)}
+.bc-glow{position:absolute;top:-15px;right:-15px;width:70px;height:70px;border-radius:50%;filter:blur(28px);pointer-events:none}
+.balance-card.debt .bc-glow{background:rgba(239,68,68,.5)}
+.balance-card.credit .bc-glow{background:rgba(16,185,129,.5)}
+.bc-label{font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.bc-name{font-size:15px;font-weight:700;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-amount{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;line-height:1}
+.balance-card.debt .bc-amount{color:var(--red)}
+.balance-card.credit .bc-amount{color:var(--green)}
+.balance-card.zero .bc-amount{color:var(--text2)}
+.bc-footer{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.bc-stat{flex:1;text-align:center;min-width:60px}
+.bc-stat-val{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600}
+.bc-stat-lbl{font-size:9px;color:var(--text3)}
+.bc-pending-badge{position:absolute;top:10px;right:10px;background:var(--orange);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px}
+
+/* Provider header */
+.prov-header{background:linear-gradient(135deg,rgba(124,58,237,.13),rgba(249,115,22,.08));border:1px solid rgba(124,58,237,.18);border-radius:var(--r);padding:22px;margin-bottom:18px;display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
+.prov-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--orange));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 6px 20px rgba(124,58,237,.4)}
+.prov-info{flex:1;min-width:0}
+.prov-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:3px}
+.prov-company{color:var(--text2);font-size:13px;margin-bottom:8px}
+.prov-tags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text2)}
+.balance-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.bs-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.bs-val{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700}
+.bs-lbl{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.04em}
+
+/* Account state card */
+.account-state{border-radius:var(--r);padding:20px;text-align:center;margin-bottom:18px}
+.account-state.owe{background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(220,38,38,.06));border:1px solid rgba(239,68,68,.18)}
+.account-state.owed{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(5,150,105,.06));border:1px solid rgba(16,185,129,.18)}
+.account-state.even{background:var(--card);border:1px solid var(--border)}
+.as-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.account-state.owe .as-label{color:rgba(239,68,68,.7)}
+.account-state.owed .as-label{color:rgba(16,185,129,.7)}
+.account-state.even .as-label{color:var(--text3)}
+.as-amount{font-family:'Rajdhani',sans-serif;font-size:46px;font-weight:700;line-height:1}
+.account-state.owe .as-amount{color:var(--red)}
+.account-state.owed .as-amount{color:var(--green)}
+.account-state.even .as-amount{color:var(--text2)}
+.as-sub{font-size:12px;color:var(--text3);margin-top:5px;line-height:1.5}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:7px}
+.tl-item{display:flex;gap:11px;padding:11px 13px;border-radius:10px;background:var(--card);border:1px solid var(--border);transition:.15s;position:relative}
+.tl-item:hover{background:var(--card2);border-color:var(--border2)}
+.tl-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.tl-dot.CXP{background:rgba(239,68,68,.15)}
+.tl-dot.CXC{background:rgba(16,185,129,.15)}
+.tl-dot.PAG{background:rgba(124,58,237,.15)}
+.tl-dot.REC{background:rgba(245,158,11,.15)}
+.tl-body{flex:1;min-width:0}
+.tl-title{font-size:13px;font-weight:600;margin-bottom:1px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.tl-meta{font-size:10px;color:var(--text3);display:flex;gap:8px;flex-wrap:wrap;margin-top:3px}
+.tl-amount{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.tl-actions{display:flex;gap:5px;margin-top:7px}
+.tl-item.pendiente-row{border-left:3px solid var(--yellow)}
+.tl-item.disputa-row{border-left:3px solid var(--red)}
+
+/* Tipo selector */
+.tipo-selector{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+.tipo-opt{padding:11px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:.15s;text-align:center;opacity:.55}
+.tipo-opt:hover{border-color:var(--border2);opacity:.8}
+.tipo-opt.sel{opacity:1}
+.tipo-opt.sel.tp-cx-p{border-color:var(--red);background:rgba(239,68,68,.07)}
+.tipo-opt.sel.tp-cx-c{border-color:var(--green);background:rgba(16,185,129,.07)}
+.tipo-opt.sel.tp-pag{border-color:var(--purple3);background:rgba(124,58,237,.07)}
+.tipo-opt.sel.tp-rec{border-color:var(--yellow);background:rgba(245,158,11,.07)}
+.tipo-icon{font-size:20px;margin-bottom:3px}
+.tipo-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.tipo-desc{font-size:9px;color:var(--text3);margin-top:2px;line-height:1.4}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 28px 90px rgba(0,0,0,.65),var(--glow-p);animation:modalIn .28s cubic-bezier(.34,1.56,.64,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.modal-head{padding:22px 22px 14px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-head h3{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;flex:1}
+.modal-close{background:none;border:none;color:var(--text3);font-size:19px;cursor:pointer;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.modal-close:hover{background:rgba(239,68,68,.14);color:var(--red)}
+.modal-body{padding:22px}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end}
+
+/* Confirm box */
+.confirm-box{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;padding:30px;max-width:360px;width:100%;text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.65),var(--glow-p);animation:modalIn .28s cubic-bezier(.34,1.56,.64,1)}
+.confirm-icon{font-size:42px;margin-bottom:10px}
+.confirm-box h3{font-size:17px;font-weight:700;margin-bottom:7px}
+.confirm-box p{font-size:12px;color:var(--text2);margin-bottom:22px;line-height:1.6}
+.confirm-actions{display:flex;gap:9px;justify-content:center}
+
+/* Toast */
+#toast{position:fixed;bottom:22px;right:22px;z-index:500;transform:translateY(80px);opacity:0;transition:all .32s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+.toast-inner{display:flex;align-items:center;gap:9px;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.5);min-width:210px}
+.toast-ok{background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(5,150,105,.14));border:1px solid rgba(16,185,129,.28);color:var(--green)}
+.toast-err{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(220,38,38,.14));border:1px solid rgba(239,68,68,.28);color:var(--red)}
+.toast-info{background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(91,33,182,.14));border:1px solid rgba(124,58,237,.28);color:var(--purple3)}
+.toast-warn{background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(217,119,6,.14));border:1px solid rgba(245,158,11,.28);color:var(--yellow)}
+
+/* Progress */
+.prog-wrap{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-top:8px}
+.prog-bar{height:100%;border-radius:3px;transition:width .6s ease}
+
+/* Tab bar */
+.tab-bar{display:flex;gap:3px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:16px}
+.tab-item{flex:1;padding:7px;border-radius:7px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;color:var(--text3);transition:.15s}
+.tab-item.active{background:linear-gradient(135deg,rgba(124,58,237,.28),rgba(249,115,22,.18));color:var(--text);border:1px solid rgba(124,58,237,.2)}
+
+/* Empty state */
+.empty-state{text-align:center;padding:55px 20px;color:var(--text3)}
+.empty-icon{font-size:46px;margin-bottom:11px;opacity:.4}
+.empty-title{font-size:15px;font-weight:700;color:var(--text2);margin-bottom:5px}
+.empty-sub{font-size:12px;line-height:1.7}
+
+/* Loading spinner */
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Dashboard charts (CSS bars) */
+.bar-chart{display:flex;gap:6px;align-items:flex-end;height:80px;padding:0 4px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .5s ease;position:relative}
+.bar:hover .bar-tooltip{opacity:1}
+.bar-tooltip{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s}
+.bar-lbl{font-size:8px;color:var(--text3);text-align:center}
+
+/* Provider view specific */
+.proveedor-welcome{background:linear-gradient(135deg,rgba(124,58,237,.14),rgba(249,115,22,.08));border:1px solid rgba(124,58,237,.2);border-radius:var(--r);padding:22px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.proveedor-welcome-icon{font-size:42px}
+.proveedor-welcome h2{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:2px}
+.proveedor-welcome p{font-size:13px;color:var(--text2)}
+
+/* Disputa form */
+.disputa-form{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);border-radius:10px;padding:14px;margin-top:10px;display:none}
+.disputa-form.open{display:block}
+
+/* Config page */
+.cfg-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;max-width:560px}
+.cfg-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cfg-instructions{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:12px;line-height:1.9;color:var(--text2)}
+.cfg-instructions code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px;font-size:11px;color:var(--purple3)}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:49;backdrop-filter:blur(3px)}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE
+══════════════════════════════════════════════════════════════ */
+@media(max-width:820px){
+  .sidebar{position:fixed;top:0;bottom:0;left:0;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .menu-toggle{display:flex;align-items:center;justify-content:center}
+  .main-wrap{width:100%}
+  .pages{padding:14px}
+  .stat-row,.grid2,.grid3{grid-template-columns:1fr 1fr}
+  .field-row,.field-row3{grid-template-columns:1fr}
+  .balance-summary{grid-template-columns:1fr 1fr}
+  .prov-header{flex-direction:column;gap:12px}
+  .topbar{padding:0 14px}
+  table{font-size:12px}
+  thead th,tbody td{padding:8px 10px}
+}
+@media(max-width:500px){
+  .stat-row{grid-template-columns:1fr 1fr}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .pages{padding:11px}
+  .modal{margin:0;border-radius:22px 22px 0 0;max-height:88vh;align-self:flex-end;max-width:100%}
+  .modal-overlay{align-items:flex-end;padding:0}
+  .confirm-box{border-radius:20px}
+  #toast{bottom:14px;right:14px;left:14px}
+  .toast-inner{min-width:unset}
+}
+@media(max-width:620px){
+  .field input,.field select,.field textarea{height:50px;font-size:15px}
+  .btn{height:44px}
+  .login-field input{height:52px;font-size:15px}
+  .bar-chart{height:60px}
+}
+
+@media print {
+  body *{visibility:hidden}
+  #printZone,#printZone *{visibility:visible}
+  #printZone{position:fixed;inset:0;background:#fff;padding:24px;color:#000;font-family:Arial,sans-serif;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- COSMIC BG -->
+<div class="cosmic-bg"><div class="stars"></div></div>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo-wrap">💊</div>
+    <div class="login-brand">FERCO FARMA</div>
+    <div class="login-sub">Sistema de Proveedores</div>
+    <div class="login-role-badge" id="loginRoleBadge">🏢 Empresa · Administrador</div>
+    <div class="login-field">
+      <label>Usuario</label>
+      <input type="text" id="loginUser" placeholder="Ingresa tu usuario" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()"><span id="loginBtnText">Ingresar →</span></button>
+    <div class="login-err" id="loginErr">Usuario o contraseña incorrectos</div>
+    <div class="login-switch">¿Eres proveedor? <a onclick="showProveedorLogin()">Ingresa aquí</a></div>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="app" class="hidden">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-icon">💊</div>
+      <div class="sidebar-brand">FERCO FARMA <span>Gestión Proveedores</span></div>
+    </div>
+    <div class="sidebar-nav" id="sidebarNav">
+      <!-- rendered by JS based on role -->
+    </div>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">FF</div>
+        <div class="user-info">
+          <div class="user-name" id="userName">Admin</div>
+          <div class="user-role" id="userRoleLabel">Administrador</div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()" title="Cerrar sesión">⏻</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-wrap">
+    <div class="topbar">
+      <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-actions" id="topbarActions"></div>
+    </div>
+    <div class="pages" id="pages">
+
+      <!-- ════ PAGE: DASHBOARD ════ -->
+      <div class="page" id="page-dashboard">
+        <div class="stat-row" id="dashStats"></div>
+        <div class="grid2" style="margin-bottom:18px">
+          <div class="glass-card">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px">📊 Movimientos por mes <span style="font-size:10px;color:var(--text3);font-family:'Nunito';font-weight:600">(últimos 6 meses)</span></div>
+            <div class="bar-chart" id="chartMeses"></div>
+          </div>
+          <div class="glass-card">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px">⚠️ Pendientes de Aprobación</div>
+            <div id="pendingList"></div>
+          </div>
+        </div>
+        <div class="glass-card">
+          <div class="section-head" style="margin-bottom:14px">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700">🏷️ Saldos por Proveedor</div>
+          </div>
+          <div id="dashBalances" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
+        </div>
+      </div>
+
+      <!-- ════ PAGE: PROVEEDORES ════ -->
+      <div class="page" id="page-proveedores">
+        <div class="section-head">
+          <h2>🤝 Proveedores</h2>
+          <button class="btn btn-primary" onclick="openProvModal()">+ Nuevo Proveedor</button>
+        </div>
+        <div class="section-sep"></div>
+        <div class="search-bar">
+          <input class="search-input" id="searchProv" placeholder="Buscar proveedor..." oninput="renderProveedores()">
+          <select class="filter-select" id="filterProvTipo" onchange="renderProveedores()">
+            <option value="">Todos los tipos</option>
+            <option value="materia_prima">Materia Prima</option>
+            <option value="distribucion">Distribución</option>
+            <option value="mixto">Mixto</option>
+          </select>
+        </div>
+        <div id="proveedoresGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
+      </div>
+
+      <!-- ════ PAGE: DETALLE PROVEEDOR ════ -->
+      <div class="page" id="page-detalle">
+        <div id="detalleContent"></div>
+      </div>
+
+      <!-- ════ PAGE: TRANSACCIONES ════ -->
+      <div class="page" id="page-transacciones">
+        <div class="section-head">
+          <h2>💸 Transacciones</h2>
+          <button class="btn btn-orange" onclick="openTxModal(null)">+ Nueva Transacción</button>
+        </div>
+        <div class="section-sep"></div>
+        <div class="search-bar">
+          <input class="search-input" id="searchTx" placeholder="Buscar por descripción..." oninput="renderTransacciones()">
+          <select class="filter-select" id="filterTxProv" onchange="renderTransacciones()">
+            <option value="">Todos los proveedores</option>
+          </select>
+          <select class="filter-select" id="filterTxTipo" onchange="renderTransacciones()">
+            <option value="">Todos los tipos</option>
+            <option value="CXP">🛒 CXP — Compra</option>
+            <option value="CXC">💼 CXC — Venta</option>
+            <option value="PAG">💸 Pago Nuestro</option>
+            <option value="REC">💰 Pago Recibido</option>
+          </select>
+          <select class="filter-select" id="filterTxStatus" onchange="renderTransacciones()">
+            <option value="">Todos los estados</option>
+            <option value="pendiente">⏳ Pendientes</option>
+            <option value="aceptado">✅ Aceptados</option>
+            <option value="disputa">🚨 En Disputa</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 CSV</button>
+        </div>
+        <div id="txTable"></div>
+      </div>
+
+      <!-- ════ PAGE: PORTAL PROVEEDOR ════ -->
+      <div class="page" id="page-portal">
+        <div id="portalContent"></div>
+      </div>
+
+      <!-- ════ PAGE: INFORMES ════ -->
+      <div class="page" id="page-informes">
+        <div class="section-head">
+          <h2>📈 Informes & Análisis</h2>
+          <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 Exportar CSV</button>
+        </div>
+        <div class="section-sep"></div>
+        <div id="informesContent"></div>
+      </div>
+
+      <!-- ════ PAGE: USUARIOS ════ -->
+      <div class="page" id="page-usuarios">
+        <div class="section-head">
+          <h2>👥 Usuarios del Sistema</h2>
+          <button class="btn btn-primary" onclick="openUserModal()">+ Nuevo Usuario</button>
+        </div>
+        <div class="section-sep"></div>
+        <div id="usersTable"></div>
+      </div>
+
+      <!-- ════ PAGE: CONFIGURACIÓN ════ -->
+      <div class="page" id="page-config">
+        <div class="section-head"><h2>⚙️ Configuración</h2></div>
+        <div class="section-sep"></div>
+        <div class="cfg-section">
+          <div class="cfg-title">🔗 Conexión Google Sheets</div>
+          <div class="field">
+            <label>URL del Apps Script</label>
+            <input type="url" id="cfgUrl" placeholder="https://script.google.com/macros/s/...">
+            <div class="field-hint">URL de la implementación web de tu Google Apps Script</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="btn btn-primary btn-sm" onclick="saveConfig()">Guardar y verificar</button>
+            <span id="cfgStatus" style="font-size:12px"></span>
+          </div>
+        </div>
+        <div class="cfg-section">
+          <div class="cfg-title">📋 Instrucciones de Configuración</div>
+          <div class="cfg-instructions">
+            <strong style="color:var(--purple3)">1.</strong> Crea una Google Sheet en tu cuenta Gmail<br>
+            <strong style="color:var(--purple3)">2.</strong> Ve a <strong>Extensiones → Apps Script</strong><br>
+            <strong style="color:var(--purple3)">3.</strong> Pega el código del archivo <code>FercoFarma_AppsScript.gs</code> que se incluye<br>
+            <strong style="color:var(--purple3)">4.</strong> Implementa → Nueva implementación → Aplicación web → <em>Ejecutar como: Yo mismo · Acceso: Cualquier usuario</em><br>
+            <strong style="color:var(--purple3)">5.</strong> Copia la URL generada y pégala arriba<br>
+            <strong style="color:var(--purple3)">6.</strong> ¡Listo! Los datos se sincronizarán automáticamente con tu Google Sheet
+          </div>
+        </div>
+        <div class="cfg-section">
+          <div class="cfg-title">🔄 Sincronización</div>
+          <button class="btn btn-ghost btn-sm" onclick="syncAll()">🔄 Sincronizar ahora</button>
+          <span id="syncStatus" style="font-size:11px;color:var(--text3);margin-left:10px"></span>
+        </div>
+      </div>
+
+    </div><!-- /pages -->
+  </div><!-- /main-wrap -->
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════════ -->
+
+<!-- PROVEEDOR MODAL -->
+<div class="modal-overlay" id="provModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="provModalTitle">🤝 Nuevo Proveedor</h3>
+      <button class="modal-close" onclick="closeModal('provModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="provId">
+      <div class="field-row">
+        <div class="field"><label>Nombre Contacto *</label><input type="text" id="provNombre" placeholder="Juan Pérez"></div>
+        <div class="field"><label>Empresa / Razón Social *</label><input type="text" id="provEmpresa" placeholder="Lab XYZ S.A.S."></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Teléfono / WhatsApp</label><input type="tel" id="provTel" placeholder="+57 300 000 0000"></div>
+        <div class="field"><label>Email</label><input type="email" id="provEmail" placeholder="contacto@empresa.com"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Tipo de Relación *</label>
+          <select id="provTipo">
+            <option value="materia_prima">🧪 Materia Prima</option>
+            <option value="distribucion">📦 Distribución / Reventa</option>
+            <option value="mixto">🔄 Mixto (ambos)</option>
+          </select>
+        </div>
+        <div class="field"><label>Ciudad / Ubicación</label><input type="text" id="provCiudad" placeholder="Cali, Colombia"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Usuario acceso portal *</label><input type="text" id="provUser" placeholder="proveedor1"></div>
+        <div class="field"><label>Contraseña portal *</label><input type="password" id="provPass" placeholder="Mínimo 6 caracteres"><div class="field-hint" id="provPassHint">Mínimo 6 caracteres</div></div>
+      </div>
+      <div class="field"><label>Notas / Condiciones Comerciales</label><textarea id="provNotas" placeholder="Condiciones de pago, plazos, observaciones..."></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('provModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProveedor()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSACCIÓN MODAL -->
+<div class="modal-overlay" id="txModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>💸 Registrar Movimiento</h3>
+      <button class="modal-close" onclick="closeModal('txModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Proveedor *</label>
+        <select id="txProv"><option value="">— Seleccionar Proveedor —</option></select>
+      </div>
+      <div style="font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px">Tipo de Movimiento *</div>
+      <div class="tipo-selector">
+        <div class="tipo-opt tp-cx-p" onclick="selectTipo('CXP',this)" id="tipo-CXP">
+          <div class="tipo-icon">🛒</div>
+          <div class="tipo-lbl" style="color:var(--red)">CXP — Compra</div>
+          <div class="tipo-desc">Compramos al proveedor.<br>Aumenta nuestra deuda.</div>
+        </div>
+        <div class="tipo-opt tp-cx-c" onclick="selectTipo('CXC',this)" id="tipo-CXC">
+          <div class="tipo-icon">💼</div>
+          <div class="tipo-lbl" style="color:var(--green)">CXC — Venta</div>
+          <div class="tipo-desc">Vendemos al proveedor.<br>Reduce nuestra deuda.</div>
+        </div>
+        <div class="tipo-opt tp-pag" onclick="selectTipo('PAG',this)" id="tipo-PAG">
+          <div class="tipo-icon">💸</div>
+          <div class="tipo-lbl" style="color:var(--purple3)">Pago Nuestro</div>
+          <div class="tipo-desc">Pagamos al proveedor<br>en efectivo/transferencia.</div>
+        </div>
+        <div class="tipo-opt tp-rec" onclick="selectTipo('REC',this)" id="tipo-REC">
+          <div class="tipo-icon">💰</div>
+          <div class="tipo-lbl" style="color:var(--yellow)">Pago Recibido</div>
+          <div class="tipo-desc">El proveedor nos paga<br>a nosotros.</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Monto (COP) *</label>
+          <input type="number" id="txMonto" placeholder="0" min="0" step="1000">
+        </div>
+        <div class="field">
+          <label>Fecha *</label>
+          <input type="date" id="txFecha">
+        </div>
+      </div>
+      <div class="field">
+        <label>Descripción / Referencia *</label>
+        <input type="text" id="txDesc" placeholder="Ej: Factura #001 — Paracetamol 500g, Producto XYZ...">
+      </div>
+      <div class="field">
+        <label>Notas adicionales</label>
+        <textarea id="txNotas" placeholder="Condiciones, plazos, número de factura, observaciones..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('txModal')">Cancelar</button>
+      <button class="btn btn-orange" onclick="saveTx()">✓ Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- USUARIO MODAL -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal" style="max-width:430px">
+    <div class="modal-head">
+      <h3>👤 Nuevo Usuario Interno</h3>
+      <button class="modal-close" onclick="closeModal('userModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>Nombre Completo *</label><input type="text" id="uNombre" placeholder="María García"></div>
+      <div class="field"><label>Usuario *</label><input type="text" id="uUser" placeholder="mgarcia"></div>
+      <div class="field"><label>Contraseña *</label><input type="password" id="uPass" placeholder="Mínimo 6 caracteres"></div>
+      <div class="field">
+        <label>Rol</label>
+        <select id="uRol">
+          <option value="operador">Operador — Solo registrar</option>
+          <option value="supervisor">Supervisor — Ver y registrar</option>
+          <option value="admin">Administrador — Acceso total</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('userModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveUser()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirmIcon">⚠️</div>
+    <h3 id="confirmTitle">¿Confirmar acción?</h3>
+    <p id="confirmDesc">Esta acción no se puede deshacer.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancelar</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ESTADO CUENTA MODAL -->
+<div class="modal-overlay" id="estadoModal">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-head">
+      <h3>📄 Estado de Cuenta — <span id="estadoProvName"></span></h3>
+      <button class="modal-close" onclick="closeModal('estadoModal')">✕</button>
+    </div>
+    <div class="modal-body" id="estadoContent" style="font-size:12px;line-height:1.7"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('estadoModal')">Cerrar</button>
+      <button class="btn btn-orange" onclick="printEstado()">🖨 Imprimir / PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- DISPUTA MODAL -->
+<div class="modal-overlay" id="disputaModal">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-head">
+      <h3>🚨 Reportar Desacuerdo</h3>
+      <button class="modal-close" onclick="closeModal('disputaModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="disputaTxInfo" style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:14px;font-size:13px"></div>
+      <div class="field">
+        <label>Motivo del desacuerdo *</label>
+        <textarea id="disputaMotivo" placeholder="Describe el problema: valor incorrecto, transacción no reconocida, fecha equivocada..." style="min-height:100px"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('disputaModal')">Cancelar</button>
+      <button class="btn btn-danger" onclick="saveDisputa()">🚨 Reportar Desacuerdo</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><div class="toast-inner toast-ok" id="toastInner"><span id="toastMsg">✓ Listo</span></div></div>
+
+<!-- PRINT ZONE -->
+<div id="printZone" style="display:none"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CONSTANTS & STATE
+// ══════════════════════════════════════════════════════════════
+const LS_URL   = 'ff2_script_url';
+const LS_AUTH  = 'ff2_session';
+const LS_DATA  = 'ff2_data';
+
+const TIPOS = {
+  CXP: {icon:'🛒', label:'Compra (CXP)',   color:'var(--red)',     sign:+1, desc:'Compramos al proveedor'},
+  CXC: {icon:'💼', label:'Venta (CXC)',    color:'var(--green)',   sign:-1, desc:'Vendemos al proveedor'},
+  PAG: {icon:'💸', label:'Pago Nuestro',   color:'var(--purple3)', sign:-1, desc:'Pago que hacemos'},
+  REC: {icon:'💰', label:'Pago Recibido',  color:'var(--yellow)',  sign:+1, desc:'Pago que recibimos'},
+};
+
+let API_URL     = localStorage.getItem(LS_URL) || '';
+let session     = null;
+let proveedores = [];
+let movimientos = [];
+let usuarios    = [];
+let currentTipo = null;
+let currentProvId = null; // for detail page
+let disputaTxId = null;
+
+// ══════════════════════════════════════════════════════════════
+//  NAVIGATION CONFIG
+// ══════════════════════════════════════════════════════════════
+const NAV_ADMIN = [
+  {id:'dashboard',   icon:'📊', label:'Dashboard',      section:'Principal'},
+  {id:'proveedores', icon:'🤝', label:'Proveedores',    section:null},
+  {id:'transacciones',icon:'💸',label:'Transacciones',  section:null, badge:()=>movimientos.filter(m=>m.estado==='pendiente').length||null},
+  {id:'informes',    icon:'📈', label:'Informes',       section:null},
+  {id:'usuarios',    icon:'👥', label:'Usuarios',       section:'Administración'},
+  {id:'config',      icon:'⚙️', label:'Configuración',  section:null},
+];
+const NAV_SUPERVISOR = [
+  {id:'dashboard',   icon:'📊', label:'Dashboard',      section:'Principal'},
+  {id:'proveedores', icon:'🤝', label:'Proveedores',    section:null},
+  {id:'transacciones',icon:'💸',label:'Transacciones',  section:null, badge:()=>movimientos.filter(m=>m.estado==='pendiente').length||null},
+  {id:'informes',    icon:'📈', label:'Informes',       section:null},
+];
+const NAV_OPERADOR = [
+  {id:'transacciones',icon:'💸',label:'Transacciones',  section:'Principal'},
+  {id:'proveedores', icon:'🤝', label:'Proveedores',    section:null},
+];
+const NAV_PROVEEDOR = [
+  {id:'portal',      icon:'📋', label:'Mis Movimientos',section:'Mi Cuenta', badge:()=>getMyPendingCount()||null},
+  {id:'informes',    icon:'📈', label:'Mi Estado de Cuenta', section:null},
+];
+
+// ══════════════════════════════════════════════════════════════
+//  API LAYER
+// ══════════════════════════════════════════════════════════════
+async function api(action, params = {}) {
+  if (!API_URL) throw new Error('Sin URL configurada. Ve a ⚙️ Configuración.');
+  let url = API_URL + '?action=' + encodeURIComponent(action);
+  for (const [k, v] of Object.entries(params)) {
+    url += '&' + k + '=' + encodeURIComponent(typeof v === 'object' ? JSON.stringify(v) : v);
+  }
+  const res  = await fetch(url);
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || data.msg || 'Error del servidor');
+  return data;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════════════
+function loadSession()   { try { session = JSON.parse(localStorage.getItem(LS_AUTH)); } catch(e) { session = null; } }
+function saveSession(s)  { session = s; localStorage.setItem(LS_AUTH, JSON.stringify(s)); }
+function clearSession()  { session = null; localStorage.removeItem(LS_AUTH); }
+
+function loadLocalData() {
+  try {
+    const d = JSON.parse(localStorage.getItem(LS_DATA));
+    if (d) { proveedores = d.proveedores||[]; movimientos = d.movimientos||[]; usuarios = d.usuarios||[]; }
+  } catch(e) {}
+}
+function saveLocalData() {
+  localStorage.setItem(LS_DATA, JSON.stringify({proveedores, movimientos, usuarios}));
+}
+
+async function hashPass(str) { return str; }
+
+
+function showProveedorLogin() {
+  document.getElementById('loginRoleBadge').textContent = '📦 Portal Proveedor';
+  document.getElementById('loginRoleBadge').style.background = 'rgba(249,115,22,.15)';
+  document.getElementById('loginRoleBadge').style.borderColor = 'rgba(249,115,22,.3)';
+  document.getElementById('loginRoleBadge').style.color = 'var(--orange2)';
+  document.querySelector('.login-switch').innerHTML = '¿Eres de FercoFarma? <a onclick="showAdminLogin()">Ingresa aquí</a>';
+  document.getElementById('loginUser').placeholder = 'Tu usuario de proveedor';
+}
+function showAdminLogin() {
+  document.getElementById('loginRoleBadge').textContent = '🏢 Empresa · Administrador';
+  document.getElementById('loginRoleBadge').style.background = '';
+  document.getElementById('loginRoleBadge').style.borderColor = '';
+  document.getElementById('loginRoleBadge').style.color = '';
+  document.querySelector('.login-switch').innerHTML = '¿Eres proveedor? <a onclick="showProveedorLogin()">Ingresa aquí</a>';
+  document.getElementById('loginUser').placeholder = 'Ingresa tu usuario';
+}
+
+async function doLogin() {
+  const user  = document.getElementById('loginUser').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  const btn   = document.querySelector('.login-btn');
+  errEl.style.display = 'none';
+  if (!user || !pass) { errEl.textContent = '⚠ Completa usuario y contraseña'; errEl.style.display = 'block'; return; }
+
+  document.getElementById('loginBtnText').innerHTML = '<span class="spin"></span>';
+  btn.disabled = true;
+
+  try {
+    // ── ADMIN ──
+    if (user === 'admin' && pass === 'ferco2024') {
+      loadLocalData();
+      if (API_URL) { try { await syncAll(); } catch(e){} }
+      saveSession({usuario:'admin', nombre:'Administrador', rol:'admin'});
+      showApp(); return;
+    }
+
+    // ── Cargar datos locales primero ──
+    loadLocalData();
+
+    // Si hay API, intentar refrescar proveedores
+    if (API_URL) {
+      try {
+        const rP = await fetch(API_URL + '?action=listProveedores');
+        const jP = await rP.json();
+        if (jP.ok && jP.data && jP.data.length > 0) {
+          proveedores = jP.data.map(o => {
+            const r = {};
+            for (const k in o) r[k] = typeof o[k]==='string' ? o[k].trim() : o[k];
+            return r;
+          });
+          saveLocalData();
+        }
+      } catch(e) { /* usa localStorage */ }
+    }
+
+    // ── Usuarios internos ──
+    const u = usuarios.find(x =>
+      x.usuario && x.usuario.trim() === user.trim() &&
+      x.hash    && x.hash.trim()    === pass.trim()
+    );
+    if (u) { saveSession({usuario:u.usuario, nombre:u.nombre, rol:u.rol}); showApp(); return; }
+
+    // ── Proveedores ──
+    const prov = proveedores.find(x =>
+      x.usuario  && x.usuario.trim().toLowerCase()  === user.trim().toLowerCase() &&
+      x.passHash && x.passHash.trim() === pass.trim()
+    );
+    if (prov) {
+      saveSession({usuario:prov.usuario, nombre:prov.nombre, rol:'proveedor', proveedorId:prov.id});
+      showApp(); return;
+    }
+
+    errEl.textContent = '⚠ Usuario o contraseña incorrectos';
+    errEl.style.display = 'block';
+  } finally {
+    document.getElementById('loginBtnText').textContent = 'Ingresar →';
+    btn.disabled = false;
+  }
+}
+
+function doLogout() {
+  clearSession();
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  showAdminLogin();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  APP INIT
+// ══════════════════════════════════════════════════════════════
+function showApp() {
+  loadLocalData();
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+
+  // Set user info
+  document.getElementById('userName').textContent   = session.nombre || session.usuario;
+  document.getElementById('userAvatar').textContent = (session.nombre || session.usuario).slice(0,2).toUpperCase();
+  document.getElementById('userRoleLabel').textContent = ROLE_LABELS[session.rol] || session.rol;
+
+  // Build sidebar nav
+  buildSidebar();
+
+  // Navigate
+  const firstPage = getDefaultPage();
+  navigateTo(firstPage);
+
+  // Sync if API configured
+  if (API_URL) syncAll().catch(()=>{});
+}
+
+const ROLE_LABELS = {admin:'Administrador', supervisor:'Supervisor', operador:'Operador', proveedor:'Proveedor'};
+
+function getDefaultPage() {
+  if (session.rol === 'proveedor') return 'portal';
+  if (session.rol === 'operador') return 'transacciones';
+  return 'dashboard';
+}
+
+function getNavConfig() {
+  if (session.rol === 'admin') return NAV_ADMIN;
+  if (session.rol === 'supervisor') return NAV_SUPERVISOR;
+  if (session.rol === 'operador') return NAV_OPERADOR;
+  if (session.rol === 'proveedor') return NAV_PROVEEDOR;
+  return NAV_OPERADOR;
+}
+
+function buildSidebar() {
+  const nav = getNavConfig();
+  let html = '';
+  let lastSection = null;
+  for (const item of nav) {
+    if (item.section && item.section !== lastSection) {
+      html += `<div class="nav-section">${item.section}</div>`;
+      lastSection = item.section;
+    }
+    const badge = item.badge ? item.badge() : null;
+    html += `<div class="nav-item" id="nav-${item.id}" onclick="navigateTo('${item.id}')">
+      <span class="nav-icon">${item.icon}</span>
+      <span>${item.label}</span>
+      ${badge ? `<span class="nav-badge" id="badge-${item.id}">${badge}</span>` : `<span id="badge-${item.id}" class="nav-badge" style="display:none"></span>`}
+    </div>`;
+  }
+  document.getElementById('sidebarNav').innerHTML = html;
+}
+
+function updateBadges() {
+  const nav = getNavConfig();
+  for (const item of nav) {
+    const el = document.getElementById('badge-' + item.id);
+    if (!el) continue;
+    const cnt = item.badge ? item.badge() : 0;
+    if (cnt) { el.textContent = cnt; el.style.display = ''; }
+    else { el.style.display = 'none'; }
+  }
+}
+
+// ── Navigation ──
+let currentPage = null;
+const PAGE_TITLES = {
+  dashboard:'Dashboard', proveedores:'Proveedores', detalle:'Detalle Proveedor',
+  transacciones:'Transacciones', portal:'Portal Proveedor', informes:'Informes',
+  usuarios:'Usuarios', config:'Configuración'
+};
+
+function navigateTo(pageId) {
+  currentPage = pageId;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + pageId);
+  if (pg) pg.classList.add('active');
+  const ni = document.getElementById('nav-' + pageId);
+  if (ni) ni.classList.add('active');
+  document.getElementById('topbarTitle').textContent = PAGE_TITLES[pageId] || pageId;
+  closeSidebar();
+  renderPage(pageId);
+}
+
+function renderPage(pageId) {
+  switch(pageId) {
+    case 'dashboard':     renderDashboard(); break;
+    case 'proveedores':   renderProveedores(); break;
+    case 'transacciones': renderTransacciones(); updateTxFilters(); break;
+    case 'portal':        renderPortal(); break;
+    case 'informes':      renderInformes(); break;
+    case 'usuarios':      renderUsersTable(); break;
+    case 'config':        document.getElementById('cfgUrl').value = API_URL; break;
+  }
+}
+
+// ── Sidebar ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SYNC
+// ══════════════════════════════════════════════════════════════
+async function syncAll() {
+  if (!API_URL) return;
+  try {
+    const [rProv, rMovs, rUsers] = await Promise.all([
+      api('listProveedores').catch(()=>({data:[]})),
+      api('listMovimientos').catch(()=>({data:[]})),
+      api('listUsuarios').catch(()=>({data:[]})),
+    ]);
+    // Trim all string fields (Sheets puede agregar espacios)
+    const trimObj = obj => { const r={}; for(const k in obj) r[k]=typeof obj[k]==='string'?obj[k].trim():obj[k]; return r; };
+    if (rProv.data)  proveedores = rProv.data.map(trimObj);
+    if (rMovs.data)  movimientos = rMovs.data.map(trimObj);
+    if (rUsers.data) usuarios    = rUsers.data.map(trimObj);
+    saveLocalData();
+    document.getElementById('syncStatus').textContent = '✅ ' + new Date().toLocaleTimeString('es-CO');
+    updateBadges();
+    if (currentPage) renderPage(currentPage);
+  } catch(e) {
+    document.getElementById('syncStatus').textContent = '⚠️ Error de sincronización';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FORMATTING HELPERS
+// ══════════════════════════════════════════════════════════════
+function fmt(n) {
+  const v = parseFloat(n) || 0;
+  if (v >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
+  if (v >= 1000)    return '$' + (v/1000).toFixed(0) + 'K';
+  return '$' + v.toLocaleString('es-CO');
+}
+function fmtFull(n) {
+  return '$' + (parseFloat(n)||0).toLocaleString('es-CO');
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  const dt = new Date(d + 'T12:00:00');
+  return dt.toLocaleDateString('es-CO', {day:'2-digit', month:'short', year:'numeric'});
+}
+function getInitials(str) {
+  return (str||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+}
+
+// ── Saldo calculation ──
+function getSaldo(provId) {
+  return movimientos
+    .filter(m => String(m.proveedorId) === String(provId) && m.estado !== 'disputa')
+    .reduce((acc, m) => {
+      const v = parseFloat(m.monto) || 0;
+      return acc + v * (TIPOS[m.tipo]?.sign || 0);
+    }, 0);
+}
+function getStats(provId) {
+  const movs = movimientos.filter(m => String(m.proveedorId) === String(provId));
+  return {
+    total:     movs.length,
+    pendiente: movs.filter(m => m.estado === 'pendiente').length,
+    aceptado:  movs.filter(m => m.estado === 'aceptado').length,
+    disputa:   movs.filter(m => m.estado === 'disputa').length,
+    compras:   movs.filter(m => m.tipo === 'CXP').reduce((a,m)=>a+(parseFloat(m.monto)||0),0),
+    pagos:     movs.filter(m => m.tipo === 'PAG').reduce((a,m)=>a+(parseFloat(m.monto)||0),0),
+  };
+}
+
+function getMyPendingCount() {
+  if (!session || session.rol !== 'proveedor') return 0;
+  return movimientos.filter(m => String(m.proveedorId) === String(session.proveedorId) && m.estado === 'pendiente').length;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════════════
+function renderDashboard() {
+  // Stats
+  const totalCompras = movimientos.filter(m=>m.tipo==='CXP').reduce((a,m)=>a+(parseFloat(m.monto)||0),0);
+  const totalPagos   = movimientos.filter(m=>m.tipo==='PAG').reduce((a,m)=>a+(parseFloat(m.monto)||0),0);
+  const pendientes   = movimientos.filter(m=>m.estado==='pendiente').length;
+  const disputas     = movimientos.filter(m=>m.estado==='disputa').length;
+  const saldoTotal   = proveedores.reduce((a,p)=>a+getSaldo(p.id),0);
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-mini">
+      <span class="stat-mini-icon">🤝</span>
+      <div class="stat-mini-val">${proveedores.length}</div>
+      <div class="stat-mini-lbl">Proveedores activos</div>
+      <div class="stat-mini-glow" style="background:rgba(124,58,237,.6)"></div>
+    </div>
+    <div class="stat-mini">
+      <span class="stat-mini-icon">🛒</span>
+      <div class="stat-mini-val">${fmt(totalCompras)}</div>
+      <div class="stat-mini-lbl">Total compras</div>
+      <div class="stat-mini-glow" style="background:rgba(239,68,68,.6)"></div>
+    </div>
+    <div class="stat-mini">
+      <span class="stat-mini-icon">⏳</span>
+      <div class="stat-mini-val" style="color:${pendientes>0?'var(--yellow)':'var(--green)'}">${pendientes}</div>
+      <div class="stat-mini-lbl">Pendientes aprobación</div>
+      <div class="stat-mini-glow" style="background:rgba(245,158,11,.6)"></div>
+    </div>
+    <div class="stat-mini">
+      <span class="stat-mini-icon">💰</span>
+      <div class="stat-mini-val" style="color:${saldoTotal>0?'var(--red)':saldoTotal<0?'var(--green)':'var(--text2)'}">${fmt(Math.abs(saldoTotal))}</div>
+      <div class="stat-mini-lbl">${saldoTotal>0?'Debes a proveedores':saldoTotal<0?'Te deben proveedores':'Balance en cero'}</div>
+      <div class="stat-mini-glow" style="background:rgba(16,185,129,.6)"></div>
+    </div>`;
+
+  // Monthly chart
+  const now = new Date();
+  const meses = [];
+  for (let i=5; i>=0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    meses.push({
+      label: d.toLocaleDateString('es-CO',{month:'short'}),
+      year: d.getFullYear(), month: d.getMonth()
+    });
+  }
+  const maxVal = Math.max(1, ...meses.map(m => {
+    return movimientos.filter(x => {
+      const d = new Date(x.fecha+'T12:00:00');
+      return d.getFullYear()===m.year && d.getMonth()===m.month;
+    }).reduce((a,x)=>a+(parseFloat(x.monto)||0),0);
+  }));
+  document.getElementById('chartMeses').innerHTML = meses.map(m => {
+    const val = movimientos.filter(x => {
+      const d = new Date(x.fecha+'T12:00:00');
+      return d.getFullYear()===m.year && d.getMonth()===m.month;
+    }).reduce((a,x)=>a+(parseFloat(x.monto)||0),0);
+    const pct = Math.max(6, Math.round((val/maxVal)*100));
+    return `<div class="bar-col">
+      <div class="bar" style="height:${pct}%;background:linear-gradient(to top,var(--purple),var(--orange));position:relative">
+        <div class="bar-tooltip">${fmt(val)}</div>
+      </div>
+      <div class="bar-lbl">${m.label}</div>
+    </div>`;
+  }).join('');
+
+  // Pending list
+  const pends = movimientos.filter(m=>m.estado==='pendiente').slice(0,5);
+  document.getElementById('pendingList').innerHTML = pends.length ? pends.map(m => {
+    const p = proveedores.find(x=>String(x.id)===String(m.proveedorId));
+    const t = TIPOS[m.tipo];
+    return `<div class="tl-item" style="margin-bottom:6px;cursor:pointer" onclick="goToProvDetail('${m.proveedorId}')">
+      <div class="tl-dot ${m.tipo}">${t?.icon||'?'}</div>
+      <div class="tl-body">
+        <div class="tl-title">${m.descripcion||'Sin descripción'}</div>
+        <div class="tl-meta"><span>${p?.empresa||p?.nombre||'?'}</span><span>${fmtDate(m.fecha)}</span></div>
+      </div>
+      <div class="tl-amount" style="color:${t?.color||'#fff'}">${fmt(m.monto)}</div>
+    </div>`;
+  }).join('') : '<div class="empty-state" style="padding:24px"><div class="empty-icon" style="font-size:28px">✅</div><div class="empty-title" style="font-size:13px">Sin pendientes</div></div>';
+
+  // Balances
+  document.getElementById('dashBalances').innerHTML = proveedores.length ? proveedores.map(p => {
+    const saldo = getSaldo(p.id);
+    const stats = getStats(p.id);
+    const cls = saldo>0?'debt':saldo<0?'credit':'zero';
+    return `<div class="balance-card ${cls}" onclick="goToProvDetail('${p.id}')">
+      <div class="bc-glow"></div>
+      ${stats.pendiente>0?`<div class="bc-pending-badge">⏳ ${stats.pendiente}</div>`:''}
+      <div class="bc-label">${p.empresa||'Proveedor'}</div>
+      <div class="bc-name">${p.nombre}</div>
+      <div class="bc-amount">${fmt(Math.abs(saldo))}</div>
+      <div class="bc-footer">
+        <div class="bc-stat"><div class="bc-stat-val">${stats.total}</div><div class="bc-stat-lbl">Movs.</div></div>
+        <div class="bc-stat"><div class="bc-stat-val" style="color:var(--yellow)">${stats.pendiente}</div><div class="bc-stat-lbl">Pendientes</div></div>
+        <div class="bc-stat"><div class="bc-stat-val" style="color:var(--red)">${stats.disputa}</div><div class="bc-stat-lbl">Disputas</div></div>
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty-state"><div class="empty-icon">🤝</div><div class="empty-title">Sin proveedores aún</div><div class="empty-sub">Agrega tu primer proveedor</div></div>';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PROVEEDORES PAGE
+// ══════════════════════════════════════════════════════════════
+function renderProveedores() {
+  const q    = (document.getElementById('searchProv')?.value||'').toLowerCase();
+  const tipo = document.getElementById('filterProvTipo')?.value||'';
+  const list = proveedores.filter(p => {
+    const match = !q || p.nombre.toLowerCase().includes(q) || (p.empresa||'').toLowerCase().includes(q);
+    const tMatch = !tipo || p.tipo === tipo;
+    return match && tMatch;
+  });
+
+  if (!list.length) {
+    document.getElementById('proveedoresGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🤝</div><div class="empty-title">No se encontraron proveedores</div><div class="empty-sub">Ajusta el filtro o agrega uno nuevo</div></div>`;
+    return;
+  }
+
+  const TIPO_LABELS = {materia_prima:'🧪 Mat. Prima', distribucion:'📦 Distribución', mixto:'🔄 Mixto'};
+  document.getElementById('proveedoresGrid').innerHTML = list.map(p => {
+    const saldo = getSaldo(p.id);
+    const stats = getStats(p.id);
+    const cls   = saldo>0?'debt':saldo<0?'credit':'zero';
+    return `<div class="balance-card ${cls}" onclick="goToProvDetail('${p.id}')">
+      <div class="bc-glow"></div>
+      ${stats.pendiente>0?`<div class="bc-pending-badge">⏳ ${stats.pendiente}</div>`:''}
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--orange));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani';font-size:16px;font-weight:700;flex-shrink:0">${getInitials(p.nombre)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.nombre}</div>
+          <div style="font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.empresa||'—'}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <span class="chip chip-purple">${TIPO_LABELS[p.tipo]||p.tipo||'—'}</span>
+        ${p.ciudad?`<span class="chip">📍 ${p.ciudad}</span>`:''}
+      </div>
+      <div class="bc-amount" style="margin-bottom:3px">${fmt(Math.abs(saldo))}</div>
+      <div style="font-size:10px;color:${saldo>0?'rgba(239,68,68,.7)':saldo<0?'rgba(16,185,129,.7)':'var(--text3)'};margin-bottom:10px">
+        ${saldo>0?'FercoFarma debe':saldo<0?'Proveedor debe':'Balance en cero'}
+      </div>
+      <div class="bc-footer">
+        <div class="bc-stat"><div class="bc-stat-val">${stats.total}</div><div class="bc-stat-lbl">Movs.</div></div>
+        <div class="bc-stat"><div class="bc-stat-val" style="color:var(--yellow)">${stats.pendiente}</div><div class="bc-stat-lbl">Pendientes</div></div>
+        <div class="bc-stat"><div class="bc-stat-val">${fmt(stats.compras)}</div><div class="bc-stat-lbl">Compras</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function goToProvDetail(provId) {
+  currentProvId = provId;
+  navigateTo('detalle');
+  renderDetalleProveedor(provId);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DETALLE PROVEEDOR
+// ══════════════════════════════════════════════════════════════
+function renderDetalleProveedor(provId) {
+  const p = proveedores.find(x=>String(x.id)===String(provId));
+  if (!p) { document.getElementById('detalleContent').innerHTML = '<div class="empty-state"><div class="empty-icon">❓</div><div class="empty-title">Proveedor no encontrado</div></div>'; return; }
+
+  const saldo   = getSaldo(provId);
+  const stats   = getStats(provId);
+  const movsProv = movimientos.filter(m=>String(m.proveedorId)===String(provId))
+    .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const cls = saldo>0?'owe':saldo<0?'owed':'even';
+  const TIPO_LABELS = {materia_prima:'🧪 Materia Prima', distribucion:'📦 Distribución', mixto:'🔄 Mixto'};
+  const canEdit = session.rol==='admin'||session.rol==='supervisor'||session.rol==='operador';
+
+  document.getElementById('detalleContent').innerHTML = `
+    <div class="section-head">
+      <button class="btn btn-ghost btn-sm" onclick="navigateTo('proveedores')">← Volver</button>
+      <h2 style="font-size:18px">${p.empresa||p.nombre}</h2>
+      ${canEdit?`<button class="btn btn-ghost btn-sm" onclick="editProveedor('${p.id}')">✏️ Editar</button>`:''}
+      ${canEdit?`<button class="btn btn-orange btn-sm" onclick="openTxModal('${p.id}')">+ Movimiento</button>`:''}
+    </div>
+
+    <div class="prov-header">
+      <div class="prov-avatar">${getInitials(p.nombre)}</div>
+      <div class="prov-info">
+        <div class="prov-name">${p.nombre}</div>
+        <div class="prov-company">${p.empresa||''} ${p.ciudad?'· '+p.ciudad:''}</div>
+        <div class="prov-tags">
+          ${TIPO_LABELS[p.tipo]?`<span class="tag">${TIPO_LABELS[p.tipo]}</span>`:''}
+          ${p.tel?`<span class="tag">📞 ${p.tel}</span>`:''}
+          ${p.email?`<span class="tag">✉️ ${p.email}</span>`:''}
+          ${p.usuario?`<span class="tag">👤 @${p.usuario}</span>`:''}
+        </div>
+        ${p.notas?`<div style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.6">${p.notas}</div>`:''}
+      </div>
+      <div>
+        <div class="balance-summary" style="grid-template-columns:1fr 1fr">
+          <div class="bs-item">
+            <div class="bs-val" style="color:${saldo>0?'var(--red)':saldo<0?'var(--green)':'var(--text2)'}">${fmtFull(Math.abs(saldo))}</div>
+            <div class="bs-lbl">${saldo>0?'FercoFarma debe':saldo<0?'Proveedor debe':'Balance cero'}</div>
+          </div>
+          <div class="bs-item">
+            <div class="bs-val">${stats.total}</div><div class="bs-lbl">Movimientos</div>
+          </div>
+          <div class="bs-item">
+            <div class="bs-val" style="color:var(--yellow)">${stats.pendiente}</div><div class="bs-lbl">Pendientes</div>
+          </div>
+          <div class="bs-item">
+            <div class="bs-val" style="color:var(--red)">${stats.disputa}</div><div class="bs-lbl">Disputas</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="showEstadoCuenta('${p.id}')">📄 Estado Cuenta</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportProvCSV('${p.id}')">📥 CSV</button>
+          ${canEdit?`<button class="btn btn-danger btn-sm" onclick="confirmDeleteProv('${p.id}')">🗑 Eliminar</button>`:''}
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item active" id="tab-todos" onclick="setDetalleTab('todos',this)">Todos (${movsProv.length})</div>
+      <div class="tab-item" id="tab-pendiente" onclick="setDetalleTab('pendiente',this)">⏳ Pendientes (${stats.pendiente})</div>
+      <div class="tab-item" id="tab-aceptado" onclick="setDetalleTab('aceptado',this)">✅ Aceptados (${stats.aceptado})</div>
+      <div class="tab-item" id="tab-disputa" onclick="setDetalleTab('disputa',this)" style="${stats.disputa>0?'animation:pulseBorder 2s infinite':''}">🚨 Disputas (${stats.disputa})</div>
+    </div>
+
+    <div id="detalleTimeline">
+      ${renderTimeline(movsProv, provId, null)}
+    </div>`;
+}
+
+let detalleFilter = null;
+function setDetalleTab(filter, el) {
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  detalleFilter = filter === 'todos' ? null : filter;
+  const p = proveedores.find(x=>String(x.id)===String(currentProvId));
+  if (!p) return;
+  const movsProv = movimientos.filter(m=>String(m.proveedorId)===String(p.id))
+    .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  document.getElementById('detalleTimeline').innerHTML = renderTimeline(movsProv, p.id, detalleFilter);
+}
+
+function renderTimeline(movs, provId, filter) {
+  const filtered = filter ? movs.filter(m=>m.estado===filter) : movs;
+  if (!filtered.length) return `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Sin movimientos${filter?' en este estado':''}</div></div>`;
+  const canEdit = session.rol==='admin'||session.rol==='supervisor';
+  const canEditOp = session.rol==='operador';
+
+  return '<div class="timeline">' + filtered.map(m => {
+    const t = TIPOS[m.tipo];
+    const statusHtml = renderStatus(m.estado);
+    const sign = t?.sign||0;
+    const amtColor = sign>0?'var(--red)':sign<0?'var(--green)':'var(--text)';
+    const prefix   = sign>0?'+':sign<0?'-':'';
+    return `<div class="tl-item ${m.estado==='pendiente'?'pendiente-row':m.estado==='disputa'?'disputa-row':''}" id="tl-${m.id}">
+      <div class="tl-dot ${m.tipo}">${t?.icon||'?'}</div>
+      <div class="tl-body">
+        <div class="tl-title">
+          <span class="tipo-pill tp-${m.tipo}">${m.tipo}</span>
+          ${m.descripcion||'Sin descripción'}
+        </div>
+        <div class="tl-meta">
+          <span>📅 ${fmtDate(m.fecha)}</span>
+          ${m.notas?`<span>📝 ${m.notas.slice(0,50)}${m.notas.length>50?'...':''}</span>`:''}
+          ${m.creadoPor?`<span>👤 ${m.creadoPor}</span>`:''}
+          ${m.disputaMotivo?`<span style="color:var(--red)">🚨 ${m.disputaMotivo.slice(0,60)}...</span>`:''}
+        </div>
+        ${statusHtml}
+        ${m.estado==='pendiente' && (canEdit||canEditOp) ? `
+        <div class="tl-actions">
+          <button class="btn btn-green btn-xs" onclick="aceptarMovimiento('${m.id}')">✅ Aceptar</button>
+          <button class="btn btn-danger btn-xs" onclick="openDisputaModal('${m.id}')">🚨 Disputar</button>
+          ${canEdit?`<button class="btn btn-ghost btn-xs" onclick="confirmDeleteTx('${m.id}')">🗑</button>`:''}
+        </div>`:''}
+        ${m.estado==='pendiente' && session.rol==='proveedor' ? `
+        <div class="tl-actions">
+          <button class="btn btn-green btn-xs" onclick="aceptarMovimiento('${m.id}')">✅ Acepto este movimiento</button>
+          <button class="btn btn-danger btn-xs" onclick="openDisputaModal('${m.id}')">🚨 Hay un desacuerdo</button>
+        </div>`:''}
+        ${m.estado==='disputa' && canEdit ? `
+        <div class="tl-actions">
+          <button class="btn btn-warning btn-xs" onclick="resolverDisputa('${m.id}')">🔧 Marcar como resuelto</button>
+          <button class="btn btn-ghost btn-xs" onclick="confirmDeleteTx('${m.id}')">🗑 Eliminar</button>
+        </div>`:''}
+      </div>
+      <div class="tl-amount" style="color:${amtColor}">${prefix}${fmt(m.monto)}</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function renderStatus(estado) {
+  if (estado==='pendiente') return `<span class="status-pendiente">⏳ Pendiente de aprobación</span>`;
+  if (estado==='aceptado')  return `<span class="status-aceptado">✅ Aceptado</span>`;
+  if (estado==='disputa')   return `<span class="status-disputa">🚨 En Disputa</span>`;
+  return '';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  TRANSACCIONES PAGE
+// ══════════════════════════════════════════════════════════════
+function updateTxFilters() {
+  const sel = document.getElementById('filterTxProv');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Todos los proveedores</option>' +
+    proveedores.map(p=>`<option value="${p.id}" ${cur===String(p.id)?'selected':''}>${p.nombre} — ${p.empresa||''}</option>`).join('');
+}
+
+function renderTransacciones() {
+  const q    = (document.getElementById('searchTx')?.value||'').toLowerCase();
+  const prov = document.getElementById('filterTxProv')?.value||'';
+  const tipo = document.getElementById('filterTxTipo')?.value||'';
+  const est  = document.getElementById('filterTxStatus')?.value||'';
+
+  const movs = movimientos
+    .filter(m => {
+      const p = proveedores.find(x=>String(x.id)===String(m.proveedorId));
+      const descMatch = !q || (m.descripcion||'').toLowerCase().includes(q) || (p?.nombre||'').toLowerCase().includes(q);
+      return descMatch && (!prov||String(m.proveedorId)===prov) && (!tipo||m.tipo===tipo) && (!est||m.estado===est);
+    })
+    .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+
+  const canEdit = session.rol==='admin'||session.rol==='supervisor';
+  if (!movs.length) {
+    document.getElementById('txTable').innerHTML = `<div class="empty-state"><div class="empty-icon">💸</div><div class="empty-title">Sin transacciones</div><div class="empty-sub">Aplica otro filtro o registra una nueva</div></div>`;
+    return;
+  }
+  document.getElementById('txTable').innerHTML = `<div class="tbl-wrap"><table>
+    <thead><tr>
+      <th>Fecha</th><th>Proveedor</th><th>Tipo</th><th>Descripción</th>
+      <th>Monto</th><th>Estado</th><th>Registrado por</th>${canEdit?'<th></th>':''}
+    </tr></thead>
+    <tbody>${movs.map(m=>{
+      const p = proveedores.find(x=>String(x.id)===String(m.proveedorId));
+      const t = TIPOS[m.tipo];
+      const sign = t?.sign||0;
+      const amtColor = sign>0?'var(--red)':sign<0?'var(--green)':'var(--text)';
+      return `<tr>
+        <td class="td-muted">${fmtDate(m.fecha)}</td>
+        <td style="font-weight:600;cursor:pointer" onclick="goToProvDetail('${m.proveedorId}')">${p?.nombre||'?'}<br><span class="td-muted" style="font-size:10px">${p?.empresa||''}</span></td>
+        <td><span class="tipo-pill tp-${m.tipo}">${t?.icon||''} ${m.tipo}</span></td>
+        <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.descripcion||'—'}</td>
+        <td class="td-mono" style="color:${amtColor}">${fmtFull(m.monto)}</td>
+        <td>${renderStatus(m.estado)}</td>
+        <td class="td-muted">${m.creadoPor||'—'}</td>
+        ${canEdit?`<td><div style="display:flex;gap:4px">
+          ${m.estado==='pendiente'?`<button class="btn btn-green btn-icon xs" onclick="aceptarMovimiento('${m.id}')" title="Aceptar">✅</button><button class="btn btn-danger btn-icon xs" onclick="openDisputaModal('${m.id}')" title="Disputar">🚨</button>`:''}
+          <button class="btn btn-danger btn-icon xs" onclick="confirmDeleteTx('${m.id}')" title="Eliminar">🗑</button>
+        </div></td>`:''}
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PORTAL PROVEEDOR
+// ══════════════════════════════════════════════════════════════
+function renderPortal() {
+  if (!session || session.rol !== 'proveedor') {
+    document.getElementById('portalContent').innerHTML = '<div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-title">Acceso solo para proveedores</div></div>';
+    return;
+  }
+  const p = proveedores.find(x=>String(x.id)===String(session.proveedorId));
+  if (!p) {
+    document.getElementById('portalContent').innerHTML = '<div class="empty-state"><div class="empty-icon">❓</div><div class="empty-title">No se encontró tu perfil de proveedor</div></div>';
+    return;
+  }
+  const movsProv = movimientos.filter(m=>String(m.proveedorId)===String(p.id))
+    .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const saldo  = getSaldo(p.id);
+  const stats  = getStats(p.id);
+  const cls    = saldo>0?'owe':saldo<0?'owed':'even';
+
+  document.getElementById('portalContent').innerHTML = `
+    <div class="proveedor-welcome">
+      <div class="proveedor-welcome-icon">👋</div>
+      <div>
+        <h2>Hola, ${p.nombre}</h2>
+        <p>${p.empresa||''} · Portal de seguimiento de cuenta corriente con FercoFarma</p>
+      </div>
+    </div>
+    <div class="account-state ${cls}" style="margin-bottom:18px">
+      <div class="as-label">${saldo>0?'FercoFarma te debe':saldo<0?'Tienes saldo pendiente con FercoFarma':'Cuenta al día'}</div>
+      <div class="as-amount">${fmtFull(Math.abs(saldo))}</div>
+      <div class="as-sub">${stats.pendiente} movimiento(s) pendiente(s) de tu aprobación · ${stats.disputa} en disputa</div>
+    </div>
+    <div class="stat-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+      <div class="stat-mini">
+        <span class="stat-mini-icon">📋</span>
+        <div class="stat-mini-val">${stats.total}</div>
+        <div class="stat-mini-lbl">Total movimientos</div>
+      </div>
+      <div class="stat-mini">
+        <span class="stat-mini-icon">⏳</span>
+        <div class="stat-mini-val" style="color:var(--yellow)">${stats.pendiente}</div>
+        <div class="stat-mini-lbl">Por aprobar</div>
+      </div>
+      <div class="stat-mini">
+        <span class="stat-mini-icon">🚨</span>
+        <div class="stat-mini-val" style="color:var(--red)">${stats.disputa}</div>
+        <div class="stat-mini-lbl">En disputa</div>
+      </div>
+    </div>
+    ${stats.pendiente>0?`<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r);padding:14px;margin-bottom:16px;font-size:13px">
+      ⚠️ <strong style="color:var(--yellow)">Tienes ${stats.pendiente} movimiento(s) pendiente(s)</strong> — Revísalos y acepta o disputa según corresponda.
+    </div>`:''}
+    <div class="tab-bar">
+      <div class="tab-item active" id="ptab-todos" onclick="setPortalTab('todos',this)">Todos (${movsProv.length})</div>
+      <div class="tab-item" id="ptab-pendiente" onclick="setPortalTab('pendiente',this)">⏳ Pendientes (${stats.pendiente})</div>
+      <div class="tab-item" id="ptab-aceptado" onclick="setPortalTab('aceptado',this)">✅ Aceptados</div>
+      <div class="tab-item" id="ptab-disputa" onclick="setPortalTab('disputa',this)">🚨 Disputas</div>
+    </div>
+    <div id="portalTimeline">${renderTimeline(movsProv, p.id, null)}</div>`;
+}
+
+function setPortalTab(filter, el) {
+  document.querySelectorAll('#portalContent .tab-item').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const p = proveedores.find(x=>String(x.id)===String(session.proveedorId));
+  if (!p) return;
+  const movsProv = movimientos.filter(m=>String(m.proveedorId)===String(p.id))
+    .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  document.getElementById('portalTimeline').innerHTML = renderTimeline(movsProv, p.id, filter==='todos'?null:filter);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  INFORMES
+// ══════════════════════════════════════════════════════════════
+function renderInformes() {
+  const isProveedor = session.rol === 'proveedor';
+  const filteredMovs = isProveedor
+    ? movimientos.filter(m=>String(m.proveedorId)===String(session.proveedorId))
+    : movimientos;
+  const filteredProvs = isProveedor
+    ? proveedores.filter(p=>String(p.id)===String(session.proveedorId))
+    : proveedores;
+
+  const totalCompras = filteredMovs.filter(m=>m.tipo==='CXP').reduce((a,m)=>a+(parseFloat(m.monto)||0),0);
+  const totalPagos   = filteredMovs.filter(m=>m.tipo==='PAG').reduce((a,m)=>a+(parseFloat(m.monto)||0),0);
+  const totalVentas  = filteredMovs.filter(m=>m.tipo==='CXC').reduce((a,m)=>a+(parseFloat(m.monto)||0),0);
+  const totalRec     = filteredMovs.filter(m=>m.tipo==='REC').reduce((a,m)=>a+(parseFloat(m.monto)||0),0);
+  const pendRate     = filteredMovs.length ? Math.round(filteredMovs.filter(m=>m.estado==='pendiente').length/filteredMovs.length*100) : 0;
+  const disputeRate  = filteredMovs.length ? Math.round(filteredMovs.filter(m=>m.estado==='disputa').length/filteredMovs.length*100) : 0;
+
+  // Promedio por proveedor
+  const provStats = filteredProvs.map(p => {
+    const movs = filteredMovs.filter(m=>String(m.proveedorId)===String(p.id));
+    const compras = movs.filter(m=>m.tipo==='CXP').reduce((a,m)=>a+(parseFloat(m.monto)||0),0);
+    return {p, movs, compras, saldo: getSaldo(p.id)};
+  }).sort((a,b)=>b.compras-a.compras);
+
+  const avgCompra = filteredMovs.filter(m=>m.tipo==='CXP').length
+    ? totalCompras / filteredMovs.filter(m=>m.tipo==='CXP').length : 0;
+
+  document.getElementById('informesContent').innerHTML = `
+    <div class="stat-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+      <div class="stat-mini"><span class="stat-mini-icon">🛒</span><div class="stat-mini-val" style="color:var(--red)">${fmt(totalCompras)}</div><div class="stat-mini-lbl">Total Compras (CXP)</div></div>
+      <div class="stat-mini"><span class="stat-mini-icon">💸</span><div class="stat-mini-val" style="color:var(--purple3)">${fmt(totalPagos)}</div><div class="stat-mini-lbl">Total Pagos Realizados</div></div>
+      <div class="stat-mini"><span class="stat-mini-icon">💼</span><div class="stat-mini-val" style="color:var(--green)">${fmt(totalVentas)}</div><div class="stat-mini-lbl">Total Ventas (CXC)</div></div>
+      <div class="stat-mini"><span class="stat-mini-icon">💰</span><div class="stat-mini-val" style="color:var(--yellow)">${fmt(totalRec)}</div><div class="stat-mini-lbl">Pagos Recibidos</div></div>
+    </div>
+
+    <div class="grid2" style="margin-bottom:18px">
+      <div class="glass-card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px">📊 Métricas Clave</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+              <span style="color:var(--text2)">Promedio por compra</span>
+              <span style="font-weight:700">${fmtFull(avgCompra)}</span>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span style="color:var(--text2)">Tasa de aprobación</span>
+              <span style="font-weight:700;color:var(--green)">${100-pendRate-disputeRate}%</span>
+            </div>
+            <div class="prog-wrap"><div class="prog-bar" style="width:${100-pendRate-disputeRate}%;background:var(--green)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span style="color:var(--text2)">Pendientes de aprobación</span>
+              <span style="font-weight:700;color:var(--yellow)">${pendRate}%</span>
+            </div>
+            <div class="prog-wrap"><div class="prog-bar" style="width:${pendRate}%;background:var(--yellow)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span style="color:var(--text2)">Tasa de disputa</span>
+              <span style="font-weight:700;color:var(--red)">${disputeRate}%</span>
+            </div>
+            <div class="prog-wrap"><div class="prog-bar" style="width:${disputeRate}%;background:var(--red)"></div></div>
+          </div>
+          <div style="padding-top:8px;border-top:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;font-size:12px">
+              <span style="color:var(--text2)">Total movimientos</span>
+              <span style="font-weight:700">${filteredMovs.length}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px">🏆 Top Proveedores por Compras</div>
+        ${provStats.length ? provStats.slice(0,5).map((ps,i) => {
+          const pct = totalCompras>0 ? Math.round(ps.compras/totalCompras*100) : 0;
+          return `<div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span style="font-weight:600">${i+1}. ${ps.p.nombre} <span style="color:var(--text3);font-weight:400">${ps.p.empresa||''}</span></span>
+              <span style="font-weight:700">${fmt(ps.compras)} <span style="color:var(--text3)">(${pct}%)</span></span>
+            </div>
+            <div class="prog-wrap"><div class="prog-bar" style="width:${pct}%;background:linear-gradient(90deg,var(--purple),var(--orange))"></div></div>
+          </div>`;
+        }).join('') : '<div class="empty-state" style="padding:20px"><div class="empty-icon">📊</div><div class="empty-title">Sin datos</div></div>'}
+      </div>
+    </div>
+
+    ${!isProveedor ? `<div class="glass-card">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px">📋 Tabla de Saldos por Proveedor</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr>
+          <th>Proveedor</th><th>Empresa</th><th>Tipo</th><th>Compras</th><th>Pagos</th><th>Movimientos</th><th>Saldo</th><th>Estado</th>
+        </tr></thead>
+        <tbody>${provStats.map(ps=>{
+          const saldo = ps.saldo;
+          const sCls = saldo>0?'var(--red)':saldo<0?'var(--green)':'var(--text2)';
+          const TIPO_LABELS = {materia_prima:'🧪 Mat. Prima', distribucion:'📦 Distribución', mixto:'🔄 Mixto'};
+          return `<tr>
+            <td style="font-weight:700;cursor:pointer" onclick="goToProvDetail('${ps.p.id}')">${ps.p.nombre}</td>
+            <td class="td-muted">${ps.p.empresa||'—'}</td>
+            <td><span class="chip chip-purple" style="font-size:9px">${TIPO_LABELS[ps.p.tipo]||ps.p.tipo||'—'}</span></td>
+            <td class="td-mono" style="color:var(--red)">${fmtFull(ps.compras)}</td>
+            <td class="td-mono" style="color:var(--purple3)">${fmtFull(getStats(ps.p.id).pagos)}</td>
+            <td class="td-muted">${ps.movs.length}</td>
+            <td class="td-mono" style="color:${sCls}">${fmtFull(Math.abs(saldo))}</td>
+            <td>${saldo>0?'<span class="chip chip-red">FercoFarma debe</span>':saldo<0?'<span class="chip chip-green">Proveedor debe</span>':'<span class="chip">Al día</span>'}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>
+    </div>` : ''}`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PROVEEDORES CRUD
+// ══════════════════════════════════════════════════════════════
+function openProvModal(editId = null) {
+  document.getElementById('provModalTitle').textContent = editId ? '✏️ Editar Proveedor' : '🤝 Nuevo Proveedor';
+  document.getElementById('provId').value = editId || '';
+  if (editId) {
+    const p = proveedores.find(x=>String(x.id)===String(editId));
+    if (p) {
+      document.getElementById('provNombre').value = p.nombre||'';
+      document.getElementById('provEmpresa').value= p.empresa||'';
+      document.getElementById('provTel').value    = p.tel||'';
+      document.getElementById('provEmail').value  = p.email||'';
+      document.getElementById('provTipo').value   = p.tipo||'materia_prima';
+      document.getElementById('provCiudad').value = p.ciudad||'';
+      document.getElementById('provUser').value   = p.usuario||'';
+      document.getElementById('provPass').value   = '';
+      document.getElementById('provNotas').value  = p.notas||'';
+      document.getElementById('provPassHint').textContent = 'Deja vacío para mantener la contraseña actual. Llena para cambiarla.';
+    }
+  } else {
+    ['provNombre','provEmpresa','provTel','provEmail','provCiudad','provUser','provPass','provNotas'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('provTipo').value='materia_prima';
+  }
+  openModal('provModal');
+}
+
+function editProveedor(id) { openProvModal(id); }
+
+async function saveProveedor() {
+  const nombre  = document.getElementById('provNombre').value.trim();
+  const empresa = document.getElementById('provEmpresa').value.trim();
+  const user    = document.getElementById('provUser').value.trim();
+  const pass    = document.getElementById('provPass').value;
+  const editId  = document.getElementById('provId').value;
+  if (!nombre||!empresa) { showToast('⚠️ Nombre y empresa son requeridos','err'); return; }
+  if (!editId && (!user||!pass)) { showToast('⚠️ Usuario y contraseña son requeridos','err'); return; }
+  if (pass && pass.length < 6) { showToast('⚠️ Contraseña mínimo 6 caracteres','err'); return; }
+
+  let passHash = '';
+  if (pass) passHash = await hashPass(pass);
+
+  const record = {
+    id:      editId || Date.now().toString(),
+    nombre,
+    empresa,
+    tel:     document.getElementById('provTel').value.trim(),
+    email:   document.getElementById('provEmail').value.trim(),
+    tipo:    document.getElementById('provTipo').value,
+    ciudad:  document.getElementById('provCiudad').value.trim(),
+    usuario: user || (proveedores.find(p=>String(p.id)===editId)?.usuario||''),
+    passHash: passHash || (proveedores.find(p=>String(p.id)===editId)?.passHash||''),
+    notas:   document.getElementById('provNotas').value.trim(),
+    creadoPor: session.usuario,
+  };
+
+  if (API_URL) {
+    try {
+      await api(editId ? 'updateProveedor' : 'addProveedor', {d: record});
+    } catch(e) { showToast('⚠️ ' + e.message, 'err'); return; }
+  }
+  if (editId) { proveedores = proveedores.map(p=>String(p.id)===String(editId)?record:p); }
+  else { proveedores.push(record); }
+  saveLocalData();
+  closeModal('provModal');
+  showToast(editId ? '✅ Proveedor actualizado' : '✅ Proveedor creado');
+  renderProveedores();
+  if (editId && currentProvId === editId) renderDetalleProveedor(editId);
+}
+
+function confirmDeleteProv(id) {
+  document.getElementById('confirmTitle').textContent = '¿Eliminar proveedor?';
+  document.getElementById('confirmDesc').textContent  = 'Se eliminarán también todos sus movimientos. Esta acción no se puede deshacer.';
+  document.getElementById('confirmIcon').textContent  = '⚠️';
+  document.getElementById('confirmOkBtn').onclick = async () => {
+    if (API_URL) try { await api('deleteProveedor',{id}); } catch(e) {}
+    proveedores = proveedores.filter(p=>String(p.id)!==String(id));
+    movimientos = movimientos.filter(m=>String(m.proveedorId)!==String(id));
+    saveLocalData();
+    closeModal('confirmModal');
+    showToast('🗑 Proveedor eliminado');
+    navigateTo('proveedores');
+  };
+  openModal('confirmModal');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  TRANSACCIONES CRUD
+// ══════════════════════════════════════════════════════════════
+function openTxModal(provId) {
+  currentTipo = null;
+  document.querySelectorAll('.tipo-opt').forEach(el=>el.classList.remove('sel'));
+  ['txProv','txMonto','txDesc','txNotas'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+  document.getElementById('txFecha').value = new Date().toISOString().split('T')[0];
+
+  // Populate proveedor select
+  const sel = document.getElementById('txProv');
+  sel.innerHTML = '<option value="">— Seleccionar Proveedor —</option>' +
+    proveedores.map(p=>`<option value="${p.id}">${p.nombre} — ${p.empresa||''}</option>`).join('');
+  if (provId) sel.value = provId;
+
+  openModal('txModal');
+}
+
+function selectTipo(tipo, el) {
+  currentTipo = tipo;
+  document.querySelectorAll('.tipo-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+async function saveTx() {
+  const provId = document.getElementById('txProv').value;
+  const monto  = parseFloat(document.getElementById('txMonto').value)||0;
+  const fecha  = document.getElementById('txFecha').value;
+  const desc   = document.getElementById('txDesc').value.trim();
+  const notas  = document.getElementById('txNotas').value.trim();
+
+  if (!provId)    { showToast('⚠️ Selecciona un proveedor','err'); return; }
+  if (!currentTipo){ showToast('⚠️ Selecciona el tipo de movimiento','err'); return; }
+  if (monto<=0)   { showToast('⚠️ Ingresa un monto válido','err'); return; }
+  if (!fecha)     { showToast('⚠️ Ingresa la fecha','err'); return; }
+  if (!desc)      { showToast('⚠️ Agrega una descripción','err'); return; }
+
+  const record = {
+    id:         Date.now().toString(),
+    proveedorId: provId,
+    tipo:        currentTipo,
+    monto,
+    fecha,
+    descripcion: desc,
+    notas,
+    estado:     'pendiente',
+    creadoPor:  session.usuario,
+    fechaCreacion: new Date().toISOString(),
+  };
+
+  if (API_URL) {
+    try { await api('addMovimiento',{d:record}); }
+    catch(e) { showToast('⚠️ ' + e.message,'err'); return; }
+  }
+  movimientos.push(record);
+  saveLocalData();
+  closeModal('txModal');
+  showToast(`✅ Movimiento registrado — Pendiente de aprobación del proveedor`,'ok');
+  updateBadges();
+  if (currentPage === 'transacciones') { renderTransacciones(); updateTxFilters(); }
+  if (currentPage === 'detalle' && currentProvId) renderDetalleProveedor(currentProvId);
+  if (currentPage === 'dashboard') renderDashboard();
+}
+
+async function aceptarMovimiento(id) {
+  const m = movimientos.find(x=>String(x.id)===String(id));
+  if (!m) return;
+  m.estado = 'aceptado';
+  m.fechaAprobacion = new Date().toISOString();
+  m.aprobadoPor = session.usuario;
+
+  if (API_URL) try { await api('updateMovimiento',{d:m}); } catch(e) {}
+  saveLocalData();
+  showToast('✅ Movimiento aceptado correctamente');
+  updateBadges();
+  refresh();
+}
+
+function openDisputaModal(id) {
+  const m = movimientos.find(x=>String(x.id)===String(id));
+  if (!m) return;
+  disputaTxId = id;
+  const p = proveedores.find(x=>String(x.id)===String(m.proveedorId));
+  const t = TIPOS[m.tipo];
+  document.getElementById('disputaTxInfo').innerHTML = `
+    <div style="display:flex;gap:10px;align-items:center">
+      <span style="font-size:22px">${t?.icon||'?'}</span>
+      <div>
+        <div style="font-weight:700">${m.descripcion||'Sin descripción'}</div>
+        <div style="font-size:11px;color:var(--text3)">${p?.nombre||'?'} · ${fmtDate(m.fecha)} · ${fmtFull(m.monto)}</div>
+      </div>
+    </div>`;
+  document.getElementById('disputaMotivo').value = '';
+  openModal('disputaModal');
+}
+
+async function saveDisputa() {
+  const motivo = document.getElementById('disputaMotivo').value.trim();
+  if (!motivo) { showToast('⚠️ Describe el motivo del desacuerdo','err'); return; }
+  const m = movimientos.find(x=>String(x.id)===String(disputaTxId));
+  if (!m) return;
+  m.estado = 'disputa';
+  m.disputaMotivo = motivo;
+  m.disputaPor = session.usuario;
+  m.fechaDisputa = new Date().toISOString();
+
+  if (API_URL) try { await api('updateMovimiento',{d:m}); } catch(e) {}
+  saveLocalData();
+  closeModal('disputaModal');
+  showToast('🚨 Desacuerdo reportado — FercoFarma será notificada','warn');
+  updateBadges();
+  refresh();
+}
+
+async function resolverDisputa(id) {
+  const m = movimientos.find(x=>String(x.id)===String(id));
+  if (!m) return;
+  m.estado = 'aceptado';
+  m.disputaMotivo = null;
+  if (API_URL) try { await api('updateMovimiento',{d:m}); } catch(e) {}
+  saveLocalData();
+  showToast('🔧 Disputa resuelta — movimiento aceptado');
+  updateBadges();
+  refresh();
+}
+
+function confirmDeleteTx(id) {
+  document.getElementById('confirmTitle').textContent = '¿Eliminar movimiento?';
+  document.getElementById('confirmDesc').textContent  = 'Esta acción eliminará el registro permanentemente.';
+  document.getElementById('confirmIcon').textContent  = '🗑';
+  document.getElementById('confirmOkBtn').onclick = async () => {
+    if (API_URL) try { await api('deleteMovimiento',{id}); } catch(e) {}
+    movimientos = movimientos.filter(m=>String(m.id)!==String(id));
+    saveLocalData();
+    closeModal('confirmModal');
+    showToast('🗑 Movimiento eliminado');
+    updateBadges();
+    refresh();
+  };
+  openModal('confirmModal');
+}
+
+function refresh() {
+  if (currentPage === 'detalle' && currentProvId) renderDetalleProveedor(currentProvId);
+  else if (currentPage) renderPage(currentPage);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ESTADO DE CUENTA / EXPORT
+// ══════════════════════════════════════════════════════════════
+function showEstadoCuenta(provId) {
+  const p = proveedores.find(x=>String(x.id)===String(provId));
+  if (!p) return;
+  const movs = movimientos.filter(m=>String(m.proveedorId)===String(provId))
+    .sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+
+  let saldo = 0;
+  let rows  = movs.map(m => {
+    const t    = TIPOS[m.tipo];
+    const v    = parseFloat(m.monto)||0;
+    const sign = t?.sign||0;
+    saldo += v * sign;
+    const cargo = sign>0?v:0;
+    const abono = sign<0?v:0;
+    return `<tr style="border-bottom:1px solid #ddd">
+      <td style="padding:6px 10px;white-space:nowrap">${fmtDate(m.fecha)}</td>
+      <td style="padding:6px 10px"><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#f0f0f0;font-weight:700">${m.tipo}</span></td>
+      <td style="padding:6px 10px;max-width:200px">${m.descripcion||'—'}</td>
+      <td style="padding:6px 10px;text-align:right;color:${cargo?'#DC2626':'#888'}">${cargo?fmtFull(cargo):'—'}</td>
+      <td style="padding:6px 10px;text-align:right;color:${abono?'#059669':'#888'}">${abono?fmtFull(abono):'—'}</td>
+      <td style="padding:6px 10px;text-align:right;font-weight:700;color:${saldo>0?'#DC2626':saldo<0?'#059669':'#888'}">${fmtFull(Math.abs(saldo))}</td>
+      <td style="padding:6px 10px"><span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${m.estado==='aceptado'?'#d1fae5':m.estado==='disputa'?'#fee2e2':'#fef3c7'};color:${m.estado==='aceptado'?'#065f46':m.estado==='disputa'?'#991b1b':'#92400e'}">${m.estado}</span></td>
+    </tr>`;
+  }).join('');
+
+  const html = `<div style="font-family:Arial,sans-serif;color:#111">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:20px;font-weight:700">FERCO FARMA</div>
+        <div style="font-size:12px;color:#666">Estado de Cuenta — ${new Date().toLocaleDateString('es-CO')}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:16px;font-weight:700">${p.nombre}</div>
+        <div style="font-size:12px;color:#666">${p.empresa||''} ${p.ciudad?'· '+p.ciudad:''}</div>
+      </div>
+    </div>
+    <div style="background:${saldo>0?'#fef2f2':saldo<0?'#f0fdf4':'#f8fafc'};border:1px solid ${saldo>0?'#fca5a5':saldo<0?'#86efac':'#e2e8f0'};border-radius:8px;padding:12px;margin-bottom:14px;text-align:center">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:2px">
+        ${saldo>0?'FercoFarma debe al proveedor':saldo<0?'Proveedor debe a FercoFarma':'Cuenta en cero'}
+      </div>
+      <div style="font-size:32px;font-weight:700;color:${saldo>0?'#DC2626':saldo<0?'#059669':'#888'}">${fmtFull(Math.abs(saldo))}</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="background:#f8fafc;border-bottom:2px solid #e2e8f0">
+        <th style="padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Fecha</th>
+        <th style="padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase">Tipo</th>
+        <th style="padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase">Descripción</th>
+        <th style="padding:8px 10px;text-align:right;font-size:10px;font-weight:700;text-transform:uppercase;color:#DC2626">Cargo</th>
+        <th style="padding:8px 10px;text-align:right;font-size:10px;font-weight:700;text-transform:uppercase;color:#059669">Abono</th>
+        <th style="padding:8px 10px;text-align:right;font-size:10px;font-weight:700;text-transform:uppercase">Saldo</th>
+        <th style="padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase">Estado</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+  </div>`;
+
+  document.getElementById('estadoProvName').textContent = p.nombre;
+  document.getElementById('estadoContent').innerHTML = html;
+  openModal('estadoModal');
+}
+
+function printEstado() {
+  document.getElementById('printZone').innerHTML = document.getElementById('estadoContent').innerHTML;
+  document.getElementById('printZone').style.display='block';
+  window.print();
+  document.getElementById('printZone').style.display='none';
+}
+
+function exportCSV() {
+  const headers = ['ID','Fecha','Proveedor','Empresa','Tipo','Descripción','Monto','Estado','Notas','Registrado Por'];
+  const rows = [...movimientos].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha)).map(m => {
+    const p = proveedores.find(x=>String(x.id)===String(m.proveedorId));
+    return [m.id, m.fecha, p?.nombre||'', p?.empresa||'', m.tipo, m.descripcion||'', m.monto, m.estado||'', m.notas||'', m.creadoPor||''];
+  });
+  const csv = [headers,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FercoFarma_Movimientos_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+}
+
+function exportProvCSV(provId) {
+  const p    = proveedores.find(x=>String(x.id)===String(provId));
+  const movs = movimientos.filter(m=>String(m.proveedorId)===String(provId))
+    .sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+  const headers = ['Fecha','Tipo','Descripción','Cargo','Abono','Saldo Acum.','Estado','Notas'];
+  let saldo = 0;
+  const rows = movs.map(m => {
+    const t = TIPOS[m.tipo]; const v = parseFloat(m.monto)||0; const sign=t?.sign||0;
+    saldo += v*sign;
+    return [m.fecha,m.tipo,m.descripcion||'',sign>0?v:'',sign<0?v:'',Math.abs(saldo),m.estado||'',m.notas||''];
+  });
+  const csv=[headers,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='EstadoCuenta_'+(p?.nombre||provId)+'_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  USUARIOS
+// ══════════════════════════════════════════════════════════════
+function renderUsersTable() {
+  if (!usuarios.length) {
+    document.getElementById('usersTable').innerHTML = `<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">Sin usuarios internos</div><div class="empty-sub">Solo existe el admin por defecto</div></div>`;
+    return;
+  }
+  const ROLE_COLORS = {admin:'chip-orange',supervisor:'chip-purple',operador:'chip-green'};
+  document.getElementById('usersTable').innerHTML = `<div class="tbl-wrap"><table>
+    <thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Creado Por</th><th></th></tr></thead>
+    <tbody>${usuarios.map(u=>`<tr>
+      <td style="font-weight:600">${u.nombre}</td>
+      <td class="td-muted">${u.usuario}</td>
+      <td><span class="chip ${ROLE_COLORS[u.rol]||'chip-blue'}">${ROLE_LABELS[u.rol]||u.rol}</span></td>
+      <td class="td-muted">${u.creadoPor||'—'}</td>
+      <td><button class="btn btn-danger btn-icon sm" onclick="confirmDeleteUser('${u.id}')">🗑</button></td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function openUserModal() { openModal('userModal'); ['uNombre','uUser','uPass'].forEach(id=>document.getElementById(id).value=''); }
+
+async function saveUser() {
+  const nombre = document.getElementById('uNombre').value.trim();
+  const user   = document.getElementById('uUser').value.trim();
+  const pass   = document.getElementById('uPass').value;
+  const rol    = document.getElementById('uRol').value;
+  if (!nombre||!user||!pass) { showToast('⚠️ Completa todos los campos','err'); return; }
+  if (pass.length < 6) { showToast('⚠️ Contraseña mínimo 6 caracteres','err'); return; }
+  if (usuarios.find(u=>u.usuario===user)) { showToast('⚠️ Ese usuario ya existe','err'); return; }
+  const hash = pass;
+  const record = {id:Date.now().toString(), nombre, usuario:user, hash, rol, creadoPor:session.usuario};
+  if (API_URL) { try { await api('addUsuario',{d:record}); } catch(e) { showToast('⚠️ '+e.message,'err'); return; } }
+  usuarios.push(record);
+  saveLocalData();
+  closeModal('userModal');
+  renderUsersTable();
+  showToast('✅ Usuario creado');
+}
+
+function confirmDeleteUser(uid) {
+  document.getElementById('confirmTitle').textContent = '¿Eliminar usuario?';
+  document.getElementById('confirmDesc').textContent  = 'El usuario perderá acceso al sistema.';
+  document.getElementById('confirmIcon').textContent  = '👤';
+  document.getElementById('confirmOkBtn').onclick = async () => {
+    if (API_URL) try { await api('deleteUsuario',{id:uid}); } catch(e) {}
+    usuarios = usuarios.filter(u=>u.id!==uid);
+    saveLocalData();
+    renderUsersTable();
+    closeModal('confirmModal');
+    showToast('🗑 Usuario eliminado');
+  };
+  openModal('confirmModal');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════════════════
+async function saveConfig() {
+  const url = document.getElementById('cfgUrl').value.trim();
+  const st  = document.getElementById('cfgStatus');
+  if (!url || !url.includes('script.google.com')) { st.innerHTML='<span style="color:var(--red)">⚠️ URL inválida</span>'; return; }
+  API_URL = url;
+  localStorage.setItem(LS_URL, url);
+  st.innerHTML = '<span style="color:var(--yellow)">🔄 Verificando...</span>';
+  try {
+    await api('listProveedores');
+    st.innerHTML = '<span style="color:var(--green)">✅ Conexión exitosa</span>';
+    syncAll();
+    showToast('✅ Configuración guardada y conectada');
+  } catch(e) {
+    st.innerHTML = '<span style="color:var(--red)">❌ ' + e.message + '</span>';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MODAL & TOAST HELPERS
+// ══════════════════════════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target===el) closeModal(el.id); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(el=>closeModal(el.id));
+});
+
+let toastTimer;
+function showToast(msg, type='ok') {
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toastInner').className = 'toast-inner toast-' + type;
+  document.getElementById('toast').classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>document.getElementById('toast').classList.remove('show'), 3800);
+}
+
+// Enter key for login
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ══════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════
+loadSession();
+if (session) {
+  showApp();
+} else {
+  document.getElementById('loginPage').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
