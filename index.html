@@ -1,443 +1,444 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FERCO FARMA · Gestión de Proveedores</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-/* ══════════════════════════════════════════════════════════════
-   ROOT & RESET
-══════════════════════════════════════════════════════════════ */
-:root {
-  --bg:        #06061A;
-  --bg2:       #0B0B28;
-  --bg3:       #10103A;
-  --card:      rgba(255,255,255,0.04);
-  --card2:     rgba(255,255,255,0.07);
-  --border:    rgba(255,255,255,0.07);
-  --border2:   rgba(255,255,255,0.14);
-  --purple:    #7C3AED;
-  --purple2:   #5B21B6;
-  --purple3:   #A78BFA;
-  --cyan:      #06B6D4;
-  --cyan2:     #0891B2;
-  --pink:      #DB2777;
-  --pink2:     #BE185D;
-  --text:      #E2E8F0;
-  --text2:     #94A3B8;
-  --text3:     #64748B;
-  --white:     #FFFFFF;
-  --green:     #10B981;
-  --red:       #EF4444;
-  --yellow:    #F59E0B;
-  --grad:      linear-gradient(135deg, var(--purple), var(--cyan));
-  --grad-hover:linear-gradient(135deg, var(--purple2), var(--cyan2));
-  --font-h:   'Rajdhani', sans-serif;
-  --font-b:   'Nunito', sans-serif;
-  --shadow:    0 10px 30px rgba(0,0,0,0.5);
-  --glass:     blur(12px) saturate(180%);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro FERCO_FARMA - Sistema de Gestión</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-b);
-  overflow-x: hidden;
-  line-height: 1.5;
-}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-/* ══════════════════════════════════════════════════════════════
-   COMPONENTS & UI
-══════════════════════════════════════════════════════════════ */
-button, input, select, textarea { font-family: inherit; font-size: 14px; border: none; outline: none; transition: 0.2s; }
-button { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; font-weight: 600; }
-input, select, textarea { background: var(--bg3); color: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; width: 100%; }
-input:focus, select:focus, textarea:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(6,182,212,0.1); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
 
-h1, h2, h3, h4 { font-family: var(--font-h); text-transform: uppercase; letter-spacing: 1px; color: var(--white); }
-
-.btn { padding: 10px 20px; font-size: 14px; }
-.btn-primary { background: var(--grad); color: var(--white); box-shadow: 0 4px 15px rgba(124,58,237,0.3); }
-.btn-primary:hover { background: var(--grad-hover); transform: translateY(-2px); }
-.btn-ghost { background: var(--card); color: var(--text2); }
-.btn-ghost:hover { background: var(--card2); color: var(--white); }
-.btn-icon { width: 36px; height: 36px; padding: 0; border-radius: 50%; }
-
-.badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
-.badge-ok { background: rgba(16,185,129,0.15); color: var(--green); }
-.badge-err { background: rgba(239,68,68,0.15); color: var(--red); }
-
-/* ══════════════════════════════════════════════════════════════
-   LAYOUT
-══════════════════════════════════════════════════════════════ */
-.login-screen {
-  position: fixed; inset: 0; z-index: 9999;
-  background: radial-gradient(circle at top right, var(--bg3), var(--bg));
-  display: flex; align-items: center; justify-content: center; padding: 20px;
-}
-.login-card {
-  width: 100%; max-width: 400px;
-  background: var(--card); border: 1px solid var(--border2); backdrop-filter: var(--glass);
-  padding: 40px; border-radius: 24px; text-align: center;
-  box-shadow: var(--shadow);
-}
-.login-logo { font-size: 32px; font-weight: 800; margin-bottom: 30px; display: block; color: var(--white); }
-.login-logo span { color: var(--cyan); }
-
-.main-layout { display: none; min-height: 100vh; }
-.sidebar {
-  width: 260px; height: 100vh; position: fixed; left: 0; top: 0;
-  background: var(--bg2); border-right: 1px solid var(--border);
-  padding: 24px; z-index: 1000;
-}
-.content { margin-left: 260px; padding: 40px; }
-
-.nav-item {
-  display: flex; align-items: center; gap: 12px; padding: 14px 18px;
-  color: var(--text2); text-decoration: none; border-radius: 12px;
-  margin-bottom: 8px; font-weight: 600;
-}
-.nav-item:hover, .nav-item.active { background: var(--card); color: var(--white); }
-.nav-item.active { border-left: 3px solid var(--cyan); }
-
-/* ══════════════════════════════════════════════════════════════
-   TABLES & DASHBOARD
-══════════════════════════════════════════════════════════════ */
-.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 40px; }
-.stat-card { background: var(--card); border: 1px solid var(--border); padding: 24px; border-radius: 20px; display: flex; flex-direction: column; gap: 8px; }
-.stat-label { font-size: 12px; font-weight: 700; color: var(--text3); text-transform: uppercase; }
-.stat-val { font-size: 28px; font-weight: 700; font-family: var(--font-h); color: var(--white); }
-
-.card-box { background: var(--card); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); }
-.card-head { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.card-body { padding: 32px; }
-
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; min-width: 800px; }
-th { text-align: left; padding: 16px; font-family: var(--font-h); color: var(--text3); font-size: 13px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
-
-/* ══════════════════════════════════════════════════════════════
-   MODALS
-══════════════════════════════════════════════════════════════ */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
-  z-index: 2000; display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: 0.3s;
-}
-.modal-overlay.open { opacity: 1; pointer-events: auto; }
-.modal {
-  background: var(--bg2); border: 1px solid var(--border2); width: 90%; max-width: 500px;
-  border-radius: 24px; box-shadow: var(--shadow); transform: scale(0.9); transition: 0.3s;
-}
-.modal-overlay.open .modal { transform: scale(1); }
-.modal-head { padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.modal-body { padding: 32px; display: flex; flex-direction: column; gap: 20px; }
-.modal-foot { padding: 24px; display: flex; justify-content: flex-end; gap: 12px; }
-
-.field { display: flex; flex-direction: column; gap: 8px; }
-.field label { font-size: 12px; font-weight: 700; color: var(--text3); text-transform: uppercase; }
-
-/* ══════════════════════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════════════════════ */
-.toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; pointer-events: none; }
-.toast { transform: translateX(120%); transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
-.toast.show { transform: translateX(0); }
-.toast-inner { background: var(--bg3); border-left: 4px solid var(--cyan); padding: 16px 24px; border-radius: 12px; box-shadow: var(--shadow); color: var(--white); font-weight: 600; display: flex; align-items: center; gap: 12px; }
-.toast-ok { border-color: var(--green); }
-.toast-err { border-color: var(--red); }
-</style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
 </head>
 <body>
+    <div id="root"></div>
 
-<div class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <div class="login-logo">FERCO<span>FARMA</span></div>
-    <div class="field" style="margin-bottom:20px">
-      <input type="text" id="loginUser" placeholder="Usuario">
-    </div>
-    <div class="field" style="margin-bottom:30px">
-      <input type="password" id="loginPass" placeholder="Contraseña">
-    </div>
-    <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Entrar al Sistema</button>
-  </div>
-</div>
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-<div class="main-layout" id="mainLayout">
-  <aside class="sidebar">
-    <div class="login-logo" style="font-size:24px; margin-bottom:40px">F<span>F</span></div>
-    <nav>
-      <a href="#" class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</a>
-      <a href="#" class="nav-item" onclick="showSection('transacciones')">💸 Transacciones</a>
-      <a href="#" class="nav-item" onclick="showSection('balance')">🏛️ Balance Total</a>
-      <a href="#" class="nav-item" style="margin-top:40px; color:var(--red)" onclick="doLogout()">🚪 Salir</a>
-    </nav>
-  </aside>
+        window.FB = {
+            initializeApp, getApps, getApp, getAuth, signInAnonymously, onAuthStateChanged,
+            getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc
+        };
+    </script>
 
-  <main class="content">
-    <div id="section-dashboard" class="app-section">
-      <header class="top-bar">
-        <h1>Dashboard General</h1>
-        <button class="btn btn-primary" onclick="openModal('txModal')">➕ Nueva Transacción</button>
-      </header>
-      <div class="stat-grid">
-        <div class="stat-card">
-          <span class="stat-label">Ingresos del Mes</span>
-          <span class="stat-val" id="stat-ingresos">$0.00</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Egresos del Mes</span>
-          <span class="stat-val" id="stat-egresos">$0.00</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Balance Neto</span>
-          <span class="stat-val" id="stat-neto">$0.00</span>
-        </div>
-      </div>
-    </div>
+    <script type="text/babel" data-presets="react">
+        const { useState, useEffect, useMemo } = React;
 
-    <div id="section-transacciones" class="app-section" style="display:none">
-      <header class="top-bar">
-        <h1>Historial de Transacciones</h1>
-        <button class="btn btn-primary" onclick="openModal('txModal')">➕ Nueva Transacción</button>
-      </header>
-      <div class="card-box">
-        <div class="card-head">
-          <input type="text" id="searchTx" placeholder="Buscar descripción..." oninput="renderTransacciones()" style="width:250px">
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Fecha</th><th>Tipo</th><th>Monto</th><th>Descripción</th><th>Acciones</th></tr>
-            </thead>
-            <tbody id="txBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAb9-1VyhRjQgmel-7eOQfHJEzg5Ljy_9k",
+            authDomain: "ffffff-84406.firebaseapp.com",
+            projectId: "ffffff-84406",
+            storageBucket: "ffffff-84406.firebasestorage.app",
+            messagingSenderId: "232467508280",
+            appId: "1:232467508280:web:6dd2cbd647dedffdfa0acd"
+        };
 
-    <div id="section-balance" class="app-section" style="display:none">
-       <header class="top-bar"><h1>Balance Consolidado</h1></header>
-       <div class="card-box" style="padding: 40px; text-align: center;">
-         <h2 style="color: var(--text3)">Saldo Disponible</h2>
-         <div id="balanceGigante" style="font-size: 64px; color: var(--cyan); font-family: var(--font-h);">$0.00</div>
-       </div>
-    </div>
-  </main>
-</div>
+        const PRODUCTOS_DISPONIBLES = ["MP", "BT", "GDT", "MGDT", "BP", "BC", "FN", "FP", "FG", "K", "G30", "G20", "G10", "MD", "MGM"];
+        const METODOS_PAGO = ["Efectivo", "Nequi", "Daviplata", "Transferencia", "Tarjeta", "Crédito", "Cruce"];
+        const OPERADORES = ["Cris_", "Felipe_", "Jhon_"];
 
-<div class="modal-overlay" id="txModal">
-  <div class="modal">
-    <div class="modal-head">
-      <h3>Nueva Transacción</h3>
-      <button class="btn-icon btn-ghost" onclick="closeModal('txModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>Tipo</label>
-        <select id="txTipo"><option value="INGRESO">Ingreso (+)</option><option value="EGRESO">Egreso (-)</option></select>
-      </div>
-      <div class="field">
-        <label>Monto</label>
-        <input type="number" id="txMonto" placeholder="0.00">
-      </div>
-      <div class="field">
-        <label>Descripción</label>
-        <textarea id="txDesc" placeholder="Detalles..." rows="3"></textarea>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('txModal')">Cancelar</button>
-      <button class="btn btn-primary" onclick="guardarTransaccion()">Registrar</button>
-    </div>
-  </div>
-</div>
+        const loadXLSX = () => {
+            return new Promise((resolve) => {
+                if (window.XLSX) { resolve(window.XLSX); return; }
+                const script = document.createElement('script');
+                script.src = "https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js";
+                script.onload = () => resolve(window.XLSX);
+                document.head.appendChild(script);
+            });
+        };
 
-<div class="modal-overlay" id="notaModal">
-  <div class="modal" style="max-width:600px">
-    <div class="modal-head">
-      <h3>📝 Detalle y Edición</h3>
-      <button class="btn-icon btn-ghost" onclick="closeModal('notaModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>Contenido de la Nota</label>
-        <textarea id="notaFullText" style="min-height: 300px; font-family: monospace; background: #000; color: #00ff00; padding: 15px;"></textarea>
-        <input type="hidden" id="notaTxId">
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('notaModal')">Cerrar</button>
-      <button class="btn btn-primary" onclick="actualizarNota()">💾 Guardar Cambios</button>
-    </div>
-  </div>
-</div>
+        const Icon = ({ name, size = 16, className = "" }) => (
+            <i data-lucide={name} className={className} style={{ width: size, height: size, display: 'inline-block' }}></i>
+        );
 
-<div class="toast-container">
-  <div class="toast" id="toast">
-    <div class="toast-inner" id="toastInner"><span id="toastMsg"></span></div>
-  </div>
-</div>
+        const getSafeFirebaseApp = () => {
+            if (!window.FB) return null;
+            return !window.FB.getApps().length ? window.FB.initializeApp(firebaseConfig) : window.FB.getApp();
+        };
 
-<script>
-// ══════════════════════════════════════════════════════════════
-//  DATA & STATE
-// ══════════════════════════════════════════════════════════════
-let movimientos = [];
-let currentUser = null;
+        const App = () => {
+            const [user, setUser] = useState(null);
+            const [registros, setRegistros] = useState([]);
+            const [clientesSugeridos, setClientesSugeridos] = useState([]);
+            const [darkMode, setDarkMode] = useState(true);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [notification, setNotification] = useState(null);
+            const [showTemplateArea, setShowTemplateArea] = useState(false);
+            const [rawTemplate, setRawTemplate] = useState('');
 
-// ══════════════════════════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════════════════════════
-function doLogin() {
-  const u = document.getElementById('loginUser').value;
-  const p = document.getElementById('loginPass').value;
-  
-  if(u === 'admin' && p === 'admin') {
-    currentUser = { user: 'Admin' };
-    localStorage.setItem('ferco_session', JSON.stringify(currentUser));
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainLayout').style.display = 'flex';
-    initApp();
-  } else {
-    showToast("Credenciales incorrectas", "err");
-  }
-}
+            const getTodayFormatted = () => new Date().toISOString().split('T')[0];
+            const [operadorActivo, setOperadorActivo] = useState(() => localStorage.getItem('ferco_operador_activo') || OPERADORES[0]);
 
-function loadSession() {
-  const s = localStorage.getItem('ferco_session');
-  if(s) {
-    currentUser = JSON.parse(s);
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainLayout').style.display = 'flex';
-    initApp();
-  }
-}
+            // --- ESTADOS DE PRODUCTO ---
+            const [listaProductos, setListaProductos] = useState([]); // Array de productos seleccionados
+            const [productoActual, setProductoActual] = useState(''); // Producto en el select
 
-function doLogout() {
-  localStorage.removeItem('ferco_session');
-  location.reload();
-}
+            const [formData, setFormData] = useState({ 
+                cliente: '', valorProducto: '', valorDomicilio: '0', ubicacion: '', fecha: getTodayFormatted() 
+            });
+            const [pagosActuales, setPagosActuales] = useState([]);
+            const [nuevoPago, setNuevoPago] = useState({ metodo: 'Efectivo', monto: '' });
 
-// ══════════════════════════════════════════════════════════════
-//  CORE LOGIC
-// ══════════════════════════════════════════════════════════════
-function initApp() {
-  const local = localStorage.getItem('ferco_data');
-  if(local) movimientos = JSON.parse(local);
-  renderDashboard();
-  renderTransacciones();
-}
+            const appId = 'ferco-farma-tracker';
 
-function showSection(id) {
-  document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
-  document.getElementById('section-' + id).style.display = 'block';
-  if(id === 'dashboard') renderDashboard();
-  if(id === 'balance') renderBalance();
-}
+            useEffect(() => {
+                if (!window.FB) return;
+                const { getAuth, signInAnonymously, onAuthStateChanged } = window.FB;
+                const app = getSafeFirebaseApp();
+                if(!app) return;
+                const auth = getAuth(app);
+                signInAnonymously(auth).catch(err => console.error("Auth Error:", err));
+                const unsubscribe = onAuthStateChanged(auth, setUser);
+                return () => unsubscribe();
+            }, []);
 
-function renderDashboard() {
-  let in_ = 0, eg_ = 0;
-  movimientos.forEach(m => {
-    if(m.tipo === 'INGRESO') in_ += Number(m.monto);
-    else eg_ += Number(m.monto);
-  });
-  document.getElementById('stat-ingresos').textContent = formatCurrency(in_);
-  document.getElementById('stat-egresos').textContent = formatCurrency(eg_);
-  document.getElementById('stat-neto').textContent = formatCurrency(in_ - eg_);
-}
+            useEffect(() => {
+                if (!user || !window.FB) return;
+                const { getFirestore, collection, onSnapshot } = window.FB;
+                const app = getSafeFirebaseApp();
+                const db = getFirestore(app);
 
-function renderTransacciones() {
-  const query = document.getElementById('searchTx').value.toLowerCase();
-  const body = document.getElementById('txBody');
-  body.innerHTML = '';
-  
-  const filtered = movimientos.filter(m => m.descripcion.toLowerCase().includes(query));
-  
-  filtered.reverse().forEach(m => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${m.fecha}</td>
-      <td><span class="badge ${m.tipo==='INGRESO'?'badge-ok':'badge-err'}">${m.tipo}</span></td>
-      <td>${formatCurrency(m.monto)}</td>
-      <td onclick="verNotaCompleta(${m.id})" style="cursor:pointer; color:var(--cyan)">🔍 Ver/Editar Nota</td>
-      <td><button class="btn btn-ghost" onclick="eliminarTx(${m.id})">🗑️</button></td>
-    `;
-    body.appendChild(tr);
-  });
-}
+                const unsubRegs = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'registros'), (snapshot) => {
+                    const data = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                    setRegistros(data.sort((a, b) => b.timestamp - a.timestamp));
+                });
 
-function renderBalance() {
-  let total = 0;
-  movimientos.forEach(m => m.tipo==='INGRESO' ? total += Number(m.monto) : total -= Number(m.monto));
-  document.getElementById('balanceGigante').textContent = formatCurrency(total);
-}
+                const unsubClientes = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'clientes'), (snapshot) => {
+                    const lista = snapshot.docs.map(doc => doc.data().nombre);
+                    setClientesSugeridos([...new Set(lista)].sort());
+                });
 
-// ══════════════════════════════════════════════════════════════
-//  ACCIONES NOTAS
-// ══════════════════════════════════════════════════════════════
-function verNotaCompleta(id) {
-  const mov = movimientos.find(m => m.id == id);
-  if(!mov) return;
-  document.getElementById('notaFullText').value = mov.descripcion;
-  document.getElementById('notaTxId').value = id;
-  openModal('notaModal');
-}
+                return () => { unsubRegs(); unsubClientes(); };
+            }, [user]);
 
-function actualizarNota() {
-  const id = document.getElementById('notaTxId').value;
-  const texto = document.getElementById('notaFullText').value;
-  const idx = movimientos.findIndex(m => m.id == id);
-  if(idx !== -1) {
-    movimientos[idx].descripcion = texto;
-    saveLocalData();
-    renderTransacciones();
-    closeModal('notaModal');
-    showToast("Nota actualizada");
-  }
-}
+            useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
 
-function guardarTransaccion() {
-  const monto = document.getElementById('txMonto').value;
-  const desc = document.getElementById('txDesc').value;
-  const tipo = document.getElementById('txTipo').value;
-  if(!monto || !desc) return showToast("Faltan datos", "err");
-  
-  movimientos.push({ id: Date.now(), fecha: new Date().toLocaleDateString(), tipo, monto, descripcion: desc });
-  saveLocalData();
-  closeModal('txModal');
-  renderTransacciones();
-  showToast("Registrado");
-}
+            useEffect(() => { localStorage.setItem('ferco_operador_activo', operadorActivo); }, [operadorActivo]);
 
-function eliminarTx(id) {
-  if(!confirm("¿Eliminar?")) return;
-  movimientos = movimientos.filter(m => m.id != id);
-  saveLocalData();
-  renderTransacciones();
-}
+            const showNotification = (msg, type = 'success') => {
+                setNotification({ msg, type });
+                setTimeout(() => setNotification(null), 3000);
+            };
 
-// ══════════════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════════════
-function saveLocalData() { localStorage.setItem('ferco_data', JSON.stringify(movimientos)); }
-function formatCurrency(v) { return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(v); }
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+            const totales = useMemo(() => {
+                return registros.reduce((acc, curr) => {
+                    acc.productos += Number(curr.valorProducto) || 0;
+                    acc.domicilios += Number(curr.valorDomicilio) || 0;
+                    acc.total += (Number(curr.valorProducto) || 0) + (Number(curr.valorDomicilio) || 0);
+                    return acc;
+                }, { productos: 0, domicilios: 0, total: 0 });
+            }, [registros]);
 
-function showToast(msg, type='ok') {
-  document.getElementById('toastMsg').textContent = msg;
-  document.getElementById('toastInner').className = 'toast-inner toast-' + type;
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
+            const totalEsperado = (parseFloat(formData.valorProducto) || 0) + (parseFloat(formData.valorDomicilio) || 0);
+            const totalPagado = pagosActuales.reduce((sum, p) => sum + p.monto, 0);
+            const diferencia = totalEsperado - totalPagado;
 
-loadSession();
-</script>
+            // --- LÓGICA DE PRODUCTOS ---
+            const agregarProductoALista = () => {
+                if (!productoActual) return;
+                setListaProductos([...listaProductos, productoActual]);
+                setProductoActual('');
+            };
+
+            const quitarProductoDeLista = (index) => {
+                setListaProductos(listaProductos.filter((_, i) => i !== index));
+            };
+
+            const agregarPagoALista = () => {
+                const monto = parseFloat(nuevoPago.monto);
+                if (!monto || monto <= 0) return;
+                setPagosActuales(prev => [...prev, { id: Date.now().toString(), metodo: nuevoPago.metodo, monto }]);
+                setNuevoPago({ metodo: 'Efectivo', monto: '' });
+            };
+
+            const quitarPagoDeLista = (id) => {
+                setPagosActuales(prev => prev.filter(p => p.id !== id));
+            };
+
+            const procesarPlantilla = () => {
+                if (!rawTemplate.trim()) return;
+                const extract = (regex) => {
+                    const match = rawTemplate.match(regex);
+                    return match ? match[1].trim() : '';
+                };
+                const pedidoExt = extract(/Pedido:\s*(.*)/i);
+                const valorPStr = extract(/Valor Pedido:\s*([\d.]+)/i);
+                const valorDStr = extract(/Valor Domi:\s*([\d.]+)/i);
+                const valorP = parseFloat(valorPStr.replace(/\./g, '')) || 0;
+                const valorD = parseFloat(valorDStr.replace(/\./g, '')) || 0;
+
+                setFormData(prev => ({
+                    ...prev,
+                    cliente: extract(/Cliente:\s*(.*)/i) || prev.cliente,
+                    ubicacion: extract(/Ubicacion:\s*(.*)/i) || prev.ubicacion,
+                    valorProducto: valorP > 0 ? valorP.toString() : prev.valorProducto,
+                    valorDomicilio: valorD > 0 ? valorD.toString() : prev.valorDomicilio,
+                }));
+                
+                if (pedidoExt) setListaProductos(pedidoExt.split(',').map(p => p.trim()));
+                setRawTemplate('');
+                setShowTemplateArea(false);
+                showNotification('Plantilla cargada');
+            };
+
+            const agregarRegistro = async (e) => {
+                e.preventDefault();
+                if (!user || !window.FB || Math.abs(diferencia) > 0.1 || listaProductos.length === 0) return;
+
+                const { getFirestore, doc, setDoc } = window.FB;
+                const db = getFirestore(getSafeFirebaseApp());
+
+                const nuevoId = Date.now().toString();
+                const payload = {
+                    ...formData,
+                    producto: listaProductos.join(', '), // Convertimos lista a texto para Firebase
+                    valorProducto: parseFloat(formData.valorProducto) || 0,
+                    valorDomicilio: parseFloat(formData.valorDomicilio) || 0,
+                    pagos: pagosActuales,
+                    operador: operadorActivo,
+                    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    timestamp: Date.now(),
+                    creadoPor: user.uid
+                };
+
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'registros', nuevoId), payload);
+                    const clientDocId = formData.cliente.toLowerCase().replace(/\s+/g, '_');
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clientes', clientDocId), { nombre: formData.cliente.trim() });
+                    
+                    setFormData({ cliente: '', valorProducto: '', valorDomicilio: '0', ubicacion: '', fecha: getTodayFormatted() });
+                    setListaProductos([]);
+                    setPagosActuales([]);
+                    showNotification('Registro guardado exitosamente');
+                } catch (err) { showNotification('Error al guardar', 'error'); }
+            };
+
+            const eliminarRegistro = async (id) => {
+                const { getFirestore, doc, deleteDoc } = window.FB;
+                const db = getFirestore(getSafeFirebaseApp());
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'registros', id));
+                    showNotification('Registro eliminado');
+                } catch (err) { showNotification('Error al eliminar', 'error'); }
+            };
+
+            const exportarExcel = async () => {
+                try {
+                    const XLSX = await loadXLSX();
+                    const data = registros.map(r => ({
+                        Fecha: r.fecha, Hora: r.hora, Operador: r.operador, Cliente: r.cliente,
+                        Ubicación: r.ubicacion, Productos: r.producto, Total: (Number(r.valorProducto) || 0) + (Number(r.valorDomicilio) || 0)
+                    }));
+                    const ws = XLSX.utils.json_to_sheet(data);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Auditoria");
+                    XLSX.writeFile(wb, `Reporte_Ferco_${new Date().getTime()}.xlsx`);
+                } catch (err) { showNotification('Error al exportar', 'error'); }
+            };
+
+            const theme = {
+                bg: darkMode ? 'bg-[#020617] text-[#e2e8f0]' : 'bg-slate-50 text-slate-900',
+                card: darkMode ? 'bg-[#0f172a] border-[#7c3aed]/20 shadow-xl' : 'bg-white border-slate-200 shadow-sm',
+                input: darkMode ? 'bg-[#1e293b] border-[#7c3aed]/30 text-white focus:border-[#f59e0b]' : 'bg-white border-slate-200 focus:ring-violet-500',
+                accent: darkMode ? 'text-[#f59e0b]' : 'text-amber-600',
+                primary: darkMode ? 'text-[#7c3aed]' : 'text-violet-600',
+                button: darkMode ? 'bg-gradient-to-r from-[#7c3aed] to-[#f59e0b] text-white' : 'bg-slate-900 text-white',
+            };
+
+            return (
+                <div className={`min-h-screen transition-all duration-700 pb-20 ${theme.bg}`}>
+                    {notification && (
+                        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-8 py-4 rounded-3xl shadow-2xl animate-bounce ${notification.type === 'error' ? 'bg-red-600' : 'bg-gradient-to-r from-[#7c3aed] to-[#f59e0b]'} text-white font-black`}>
+                            <Icon name={notification.type === 'error' ? "alert-circle" : "check-circle-2"} /> {notification.msg}
+                        </div>
+                    )}
+
+                    <div className="max-w-7xl mx-auto px-4 pt-8">
+                        <header className="flex flex-col md:flex-row justify-between items-center mb-10 gap-8">
+                            <div className="flex items-center gap-6 group">
+                                <div className={`relative w-24 h-24 rounded-full overflow-hidden border-2 p-1 ${darkMode ? 'bg-black border-[#7c3aed]/50' : 'bg-white border-slate-200'}`}>
+                                    <Icon name="flask-conical" size={40} className="w-full h-full p-6 text-violet-500 opacity-20" />
+                                </div>
+                                <div>
+                                    <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter leading-none">
+                                        <span className={theme.primary}>FERCO</span> <span className={theme.accent}>FARMA</span>
+                                    </h1>
+                                    <p className="text-[10px] uppercase tracking-[0.4em] font-black opacity-40 mt-3">Certified Quality Interface</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setDarkMode(!darkMode)} className={`p-4 rounded-2xl border ${theme.card}`}>
+                                <Icon name={darkMode ? "sun" : "moon"} size={20} className={darkMode ? "text-amber-400" : "text-violet-600"} />
+                            </button>
+                        </header>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            {[
+                                { label: 'Mercancía Total', val: totales.productos, icon: 'shopping-bag', color: 'border-violet-500' },
+                                { label: 'Ingresos Valor Domi', val: totales.domicilios, icon: 'smartphone', color: 'border-amber-500' },
+                                { label: 'Balance de Caja', val: totales.total, icon: 'zap', color: 'border-white' }
+                            ].map((stat, i) => (
+                                <div key={i} className={`p-8 rounded-[2.5rem] border-l-[6px] ${stat.color} ${theme.card}`}>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <p className="text-[10px] font-black uppercase opacity-40 tracking-widest">{stat.label}</p>
+                                        <Icon name={stat.icon} size={16} className={i === 2 ? theme.accent : theme.primary} />
+                                    </div>
+                                    <p className="text-4xl font-black italic tracking-tight font-mono">${stat.val.toLocaleString()}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex justify-center mb-8">
+                            <div className="flex gap-2 p-1.5 rounded-2xl bg-black/40 border border-white/5">
+                                {OPERADORES.map(op => (
+                                    <button key={op} onClick={() => setOperadorActivo(op)} className={`px-4 py-2 rounded-xl text-[10px] font-black transition-all ${operadorActivo === op ? 'bg-violet-600 text-white' : 'opacity-30'}`}>{op}</button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            <section className="lg:col-span-5 xl:col-span-4 space-y-6">
+                                <div className={`p-8 rounded-[3rem] border ${theme.card}`}>
+                                    <h2 className="text-xl font-black mb-6 flex items-center gap-3 italic uppercase tracking-tighter"><Icon name="zap" size={18} className={theme.accent} /> Datos de Pedido</h2>
+                                    <form onSubmit={agregarRegistro} className="space-y-4">
+                                        <input type="date" className={`w-full px-6 py-4 rounded-2xl border font-bold ${theme.input}`} value={formData.fecha} onChange={e => setFormData({...formData, fecha: e.target.value})} />
+                                        <input required list="clients" className={`w-full px-6 py-4 rounded-2xl border ${theme.input}`} placeholder="Identidad del Cliente" value={formData.cliente} onChange={e => setFormData({...formData, cliente: e.target.value})} />
+                                        <datalist id="clients">{clientesSugeridos.map(c => <option key={c} value={c} />)}</datalist>
+                                        
+                                        {/* SECCIÓN MULTIPRODUCTO */}
+                                        <div className="space-y-2">
+                                            <div className="flex gap-2">
+                                                <select className={`flex-1 px-4 py-4 rounded-2xl border font-bold ${theme.input}`} value={productoActual} onChange={e => setProductoActual(e.target.value)}>
+                                                    <option value="">Añadir Producto...</option>
+                                                    {PRODUCTOS_DISPONIBLES.map(p => <option key={p} value={p}>{p}</option>)}
+                                                </select>
+                                                <button type="button" onClick={agregarProductoALista} className="px-6 rounded-2xl bg-violet-600 text-white font-black">+</button>
+                                            </div>
+                                            <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-black/20 rounded-xl border border-white/5">
+                                                {listaProductos.length === 0 && <span className="text-[10px] opacity-30 italic p-1">No hay productos añadidos...</span>}
+                                                {listaProductos.map((p, idx) => (
+                                                    <span key={idx} className="flex items-center gap-2 bg-violet-600/20 text-violet-400 px-3 py-1 rounded-lg text-[10px] font-black border border-violet-500/30">
+                                                        {p} <button type="button" onClick={() => quitarProductoDeLista(idx)} className="text-red-500 hover:text-red-400">×</button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <input className={`w-full px-6 py-4 rounded-2xl border ${theme.input}`} placeholder="Ubicación / Sector" value={formData.ubicacion} onChange={e => setFormData({...formData, ubicacion: e.target.value})} />
+                                        
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold uppercase ml-2 opacity-50 italic">Valor Producto $</label>
+                                                <input required type="number" className={`w-full px-6 py-4 rounded-2xl border font-black ${theme.input}`} value={formData.valorProducto} onChange={e => setFormData({...formData, valorProducto: e.target.value})} />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold uppercase ml-2 opacity-50 italic">Valor Domi $</label>
+                                                <input type="number" className={`w-full px-6 py-4 rounded-2xl border font-black ${theme.input}`} value={formData.valorDomicilio} onChange={e => setFormData({...formData, valorDomicilio: e.target.value})} />
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-4">
+                                            <div className="flex justify-between items-center mb-4 text-[10px] font-black uppercase opacity-50">
+                                                <span>Paga con</span> <span className={diferencia === 0 ? 'text-[#39ff14]' : 'text-amber-500'}>Falta: ${diferencia.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex gap-2 mb-4">
+                                                <select className={`flex-1 px-3 py-3 rounded-xl border text-xs font-bold ${theme.input}`} value={nuevoPago.metodo} onChange={e => setNuevoPago({...nuevoPago, metodo: e.target.value})}>
+                                                    {METODOS_PAGO.map(m => <option key={m} value={m}>{m}</option>)}
+                                                </select>
+                                                <input type="number" placeholder="$" className={`w-24 px-3 py-3 rounded-xl border font-black text-xs ${theme.input}`} value={nuevoPago.monto} onChange={e => setNuevoPago({...nuevoPago, monto: e.target.value})} />
+                                                <button type="button" onClick={agregarPagoALista} className="p-3 rounded-xl bg-violet-600 text-white"><Icon name="plus" size={18} /></button>
+                                            </div>
+                                            <div className="space-y-2 max-h-32 overflow-y-auto custom-scrollbar">
+                                                {pagosActuales.map(p => (
+                                                    <div key={p.id} className="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/5">
+                                                        <span className="text-[9px] font-black uppercase opacity-50">{p.metodo}</span>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-xs font-bold italic">${p.monto.toLocaleString()}</span>
+                                                            <button type="button" onClick={() => quitarPagoDeLista(p.id)} className="text-red-500">×</button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit" disabled={diferencia !== 0 || listaProductos.length === 0} className={`w-full py-5 rounded-2xl font-black uppercase italic tracking-widest disabled:opacity-20 ${theme.button}`}>Guardar Registro</button>
+                                    </form>
+                                </div>
+                            </section>
+
+                            <section className="lg:col-span-7 xl:col-span-8 space-y-6">
+                                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                                    <div className="relative w-full md:w-96 group">
+                                        <Icon name="search" size={18} className="absolute left-5 top-4 text-slate-500" />
+                                        <input className={`w-full pl-12 pr-6 py-4 rounded-2xl border ${theme.input}`} placeholder="Filtrar por cliente o producto..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                                    </div>
+                                    <button onClick={exportarExcel} className={`flex items-center gap-2 px-8 py-4 rounded-2xl text-[11px] font-black uppercase ${darkMode ? 'bg-white text-black' : 'bg-slate-900 text-white'}`}><Icon name="download" size={16} /> Excel</button>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {registros.filter(r => r.cliente.toLowerCase().includes(searchTerm.toLowerCase()) || r.producto.toLowerCase().includes(searchTerm.toLowerCase())).map(reg => (
+                                        <div key={reg.id} className={`p-6 rounded-[2.5rem] border ${theme.card}`}>
+                                            <div className="flex flex-col md:flex-row justify-between gap-6">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <span className="text-[9px] font-black px-2 py-1 rounded bg-violet-600/10 text-violet-400 border border-violet-500/20">{reg.fecha}</span>
+                                                        <span className="text-[9px] font-black px-2 py-1 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase italic">{reg.operador}</span>
+                                                        <h3 className="text-xl font-black italic uppercase">{reg.cliente}</h3>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-4 opacity-50 text-xs font-bold italic">
+                                                        <span className="flex items-center gap-1.5"><Icon name="zap" size={14} className="text-amber-500" /> {reg.producto}</span>
+                                                        {reg.ubicacion && <span className="flex items-center gap-1.5"><Icon name="map-pin" size={14} /> {reg.ubicacion}</span>}
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col md:items-end justify-center min-w-[140px]">
+                                                    <p className="text-3xl font-black italic">${((Number(reg.valorProducto) || 0) + (Number(reg.valorDomicilio) || 0)).toLocaleString()}</p>
+                                                    <div className="flex flex-wrap md:justify-end gap-1 mt-2">
+                                                        {(reg.pagos || []).map((p, idx) => (
+                                                            <span key={idx} className="text-[8px] font-black uppercase px-2 py-0.5 rounded border border-white/10 opacity-40">{p.metodo}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center justify-end border-l border-white/5 pl-4">
+                                                    <button onClick={() => eliminarRegistro(reg.id)} className="text-slate-500 hover:text-red-500 transition-all"><Icon name="trash-2" size={20} /></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
